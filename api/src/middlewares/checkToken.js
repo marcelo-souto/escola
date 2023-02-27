@@ -8,9 +8,10 @@ const checkToken = async (req, res, next) => {
 	if (!token) return res.status(401).json({ erro: 'Token inválido.' });
 
 	try {
-		const { administradorId, clienteId } = verify(token, process.env.PRIVATE_KEY);
-		if (administradorId) req.body.administradorId = administradorId;
-		if (clienteId) req.body.clienteId = clienteId
+		const { diretorId, professorId } = verify(token, process.env.PRIVATE_KEY);
+		
+		if (diretorId) req.body.diretorId = diretorId;
+		if (professorId) req.body.professorId = professorId;
 
 		next();
 	} catch (error) {

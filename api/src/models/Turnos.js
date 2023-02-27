@@ -1,5 +1,6 @@
 const sequelize = require('../database/database.js');
 const { DataTypes } = require('sequelize');
+const Diretor = require('./Diretor')
 
 const Turno = sequelize.define(
   'turnos',
@@ -15,6 +16,14 @@ const Turno = sequelize.define(
     periodo:{
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    diretorId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Diretor,
+        key: "diretorId",
+        allowNull: false,
+      },
     }
   
   },
@@ -25,4 +34,7 @@ const Turno = sequelize.define(
   
   // Turno.sync({force:true})
 
-  module.exports = Turno;
+Turno.belongsTo(Diretor, { foreignKey: "diretorId" });
+Diretor.hasMany(Turno, { foreignKey: "diretorId" });
+
+module.exports = Turno;
