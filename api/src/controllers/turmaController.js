@@ -20,7 +20,7 @@ const anoController = {
 		const { turmaId, turnoId, anoId } = req.body;
 
 		try {
-			const turma = await Turma.findOne(turmaId);
+			const turma = await Turma.findByPk(turmaId);
 
 			const turmaAtt = turma.update({
 				turnoId: turnoId,
