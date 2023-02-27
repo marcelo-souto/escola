@@ -26,7 +26,8 @@ const anoController = {
                 turnoId:turnoId,
                 anoId:anoId,
                 numeroFinal:numeroFinal,
-                codigo:cod
+                codigo:cod,
+                diretorId:id
             })
 
             return res.status(200).json(`Turma criada com sucesso: ${turma.codigo}`)
