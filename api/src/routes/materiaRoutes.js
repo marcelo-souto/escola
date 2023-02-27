@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const materiaController = require('../controllers/materiaController.js')
+const checkToken = require('../middlewares/checkToken.js')
 
 const router = Router()
 
