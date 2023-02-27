@@ -1,6 +1,6 @@
 const Turno = require("../models/Turnos.js");
 
-const anoController = {
+const turnoController = {
   create: async (req, res) => {
     const { periodo } = req.body;
 
@@ -64,4 +64,4 @@ const anoController = {
   },
 };
 
-module.exports = anoController;
+module.exports = turnoController;

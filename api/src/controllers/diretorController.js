@@ -10,6 +10,8 @@ const { hash, compare } = require('bcrypt');
 const { sign, verify } = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
+dotenv.config();
+
 const transporter = nodemailer.createTransport({
 	host: process.env.E_HOST,
 	port: process.env.E_PORT,
@@ -29,8 +31,12 @@ const diretorController = {
 
 		try {
 			validate({ nome, isRequired: true });
+			validate({ cpf, type: 'cpf', isRequired: true });
+			validate({ 'data de nascimento': dataNascimento, type: 'data', isRequired: true });
+			validate({ telefone, type: 'telefone', isRequired: true });
 			validate({ email, type: 'email', isRequired: true });
 			validate({ senha, type: 'senha', isRequired: true });
+			
 
 			const diretorJaExiste = await Diretor.findOne({
 				where: {
@@ -68,7 +74,7 @@ const diretorController = {
 				senha: senhaCriptografada
 			});
 
-			const id = `${diretor.diretorId}@A`;
+			const id = `${diretor.diretorId}@D`;
 
 			const emailToken = sign({ userId: id }, process.env.PRIVATE_KEY, {
 				expiresIn: '1d'
@@ -93,7 +99,7 @@ const diretorController = {
 
 			return res
 				.status(200)
-				.json('Diretor cadastrado com sucesso com sucesso: ' + diretor);
+				.json({ mensagem: `Diretor ${diretor.nome} criado com sucesso.` });
 		} catch (erro) {
 			return res.json({ erro: erro.message });
 		}
@@ -111,7 +117,7 @@ const diretorController = {
 				if (!resultado) throw new Error();
 				const id = resultado.userId.split('@');
 
-				if (id[1] === 'A') userId = id[0];
+				if (id[1] === 'D') userId = id[0];
 				else throw new Error();
 			} catch (error) {
 				return res.status(400).json({ erro: 'Token Inválido.' });
@@ -123,7 +129,7 @@ const diretorController = {
 
 			const tokenValid = await Token.findOne({
 				where: {
-					[Op.and]: [{ userId: `${userId}@A` }, { token: token }]
+					[Op.and]: [{ userId: `${userId}@D` }, { token: token }]
 				}
 			});
 
@@ -198,7 +204,14 @@ const diretorController = {
 	},
 
 	update: async (req, res) => {
-		const { diretorId: id, email, nome } = req.body;
+		const {
+			diretorId: id,
+			email,
+			nome,
+			telefone,
+			cpf,
+			dataNascimento
+		} = req.body;
 
 		if (!email && !nome)
 			return res.status(400).json({
@@ -218,19 +231,34 @@ const diretorController = {
 
 			validate({ nome });
 			validate({ email, type: 'email' });
+			validate({ telefone, type: 'telefone' });
+			validate({ cpf, type: 'cpf' });
+			validate({ 'data de nascimento': dataNascimento, type: 'data' });
 
-			const emailJaCadastrado = await diretor.findOne({
+			const infoJaCadastrada = await Diretor.findOne({
 				where: {
-					email: `${email}`
+					[Op.or]: [
+						{ email: `${email}` },
+						{ cpf: `${cpf}` },
+						{ telefone: `${telefone}` }
+					]
 				}
 			});
 
-			if (emailJaCadastrado)
-				return res.status(400).json({ erro: 'Email já cadastrado.' });
+			if (infoJaCadastrada) {
+				if (infoJaCadastrada.email === email)
+					throw Error('Email já está sendo utilizado.');
+				if (infoJaCadastrada.cpf === cpf) throw Error('CPF já cadastrado.');
+				if (infoJaCadastrada.telefone === telefone)
+					throw Error('Telefone já cadastrado.');
+			}
 
 			await diretor.update({
 				nome: nome ? nome : diretor.nome,
-				email: email ? email : diretor.email
+				email: email ? email : diretor.email,
+				telefone: telefone ? telefone : diretor.telefone,
+				cpf: cpf ? cpf : diretor.cpf,
+				dataNascimento: dataNascimento ? dataNascimento : diretor.dataNascimento
 			});
 
 			return res
@@ -359,20 +387,20 @@ const diretorController = {
 
 			const tokenEmail = await Token.findOne({
 				where: {
-					usuarioId: `${diretor.diretorId}@A`
+					usuarioId: `${diretor.diretorId}@D`
 				}
 			});
 
 			if (tokenEmail) await tokenEmail.destroy();
 
 			const token = sign(
-				{ usuarioId: `${diretor.diretorId}@A` },
+				{ usuarioId: `${diretor.diretorId}@D` },
 				process.env.PRIVATE_KEY,
 				{ expiresIn: '1d' }
 			);
 
 			const emailNovoToken = await Token.create({
-				usuarioId: `${diretor.diretorId}@A`,
+				usuarioId: `${diretor.diretorId}@D`,
 				token: token
 			});
 
@@ -382,7 +410,7 @@ const diretorController = {
 				from: `Cinema <nodecinemapc2@gmail.com>`,
 				to: `${diretor.email}`,
 				html: emailConfirmationTemplate(
-					'admin',
+					'diretor',
 					diretor.nome,
 					emailNovoToken.token
 				)

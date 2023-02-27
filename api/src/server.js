@@ -9,6 +9,8 @@ const turnosRoutes = require('./routes/turnosRoutes.js');
 const turmasRoutes = require('./routes/turmasRoutes.js');
 const tokenRouts = require('./routes/tokenRoutes.js')
 const diretorRoutes = require('./routes/diretorRoutes.js')
+const materiaRoutes = require('./routes/materiaRoutes')
+const professorRoutes = require('./routes/professorRoutes')
 
 
 // Variaveis
@@ -24,8 +26,10 @@ server.use(logger);
 server.use('/', anoRoutes);
 server.use('/', turnosRoutes);
 server.use('/', turmasRoutes);
+server.use('/', materiaRoutes)
 server.use('/', tokenRouts);
 server.use('/', diretorRoutes);
+server.use('/', professorRoutes)
 
 
 server.get('/', (req, res) => {
