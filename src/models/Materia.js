@@ -2,6 +2,7 @@ const sequelize = require("../database/database.js");
 const { DataTypes } = require("sequelize");
 const Diretor = require("./Diretor");
 
+
 const Materia = sequelize.define(
   "materias",
   {
@@ -29,7 +30,7 @@ const Materia = sequelize.define(
   }
 );
 
-Materia.sync({ force: true });
+// Materia.sync({ force: true });
 
 Materia.belongsTo(Diretor, { foreignKey: "diretorId" });
 Materia.hasOne(Diretor, { foreignKey: "diretorId" });

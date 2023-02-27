@@ -5,7 +5,7 @@ const router = Router()
 
 router.post('/ano/create', anoController.create)
 router.put('/ano/update', anoController.update)
-router.get('/ano/getall', anoController.getAll)
+router.get('/ano/get', anoController.getAll)
 router.delete('/ano/delete', anoController.delete)
 
 

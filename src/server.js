@@ -8,7 +8,7 @@ const anoRoutes = require('./routes/anoRoutes.js');
 const turnosRoutes = require('./routes/turnosRoutes.js');
 const turmasRoutes = require('./routes/turmasRoutes.js');
 const tokenRouts = require('./routes/tokenRoutes.js')
-const diretorRoutes = require('./routes/dirtorRoutes.js')
+const diretorRoutes = require('./routes/diretorRoutes.js')
 
 
 // Variaveis
