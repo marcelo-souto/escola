@@ -2,7 +2,6 @@ const sequelize = require("../database/database.js");
 const { DataTypes } = require("sequelize");
 const Diretor = require("./Diretor.js");
 
-
 const Materia = sequelize.define(
   "materias",
   {

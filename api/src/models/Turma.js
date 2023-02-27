@@ -2,6 +2,7 @@ const sequelize = require("../database/database.js");
 const { DataTypes } = require("sequelize");
 const Turno = require("./Turnos");
 const Ano = require("./Ano");
+const Diretor = require('./Diretor')
 
 const Turma = sequelize.define(
   "turmas",
@@ -30,21 +31,33 @@ const Turma = sequelize.define(
         allowNull: false,
       },
     },
+    numeroFinal: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
 
     codigo: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        return this.turnoId * 1000 + this.anoId * 100 + this.id;
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },    
+    diretorId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Diretor,
+        key: "diretorId",
+        allowNull: false,
       },
-    },
+    }
   },
   {
     timestamps: false,
   }
 );
 
-// Turma.sync({force:true})
+Turma.sync({force:true})
 
+Turma.belongsTo(Diretor, { foreignKey: "diretorId" });
+Diretor.hasMany(Turma, { foreignKey: "diretorId" });
 Turma.belongsTo(Ano, { foreignKey: "anoId" });
 Ano.hasMany(Turma, { foreignKey: "anoId" });
 Turma.belongsTo(Turno, { foreignKey: "turnoId" });

@@ -2,14 +2,19 @@ const Turno = require("../models/Turnos.js");
 
 const turnoController = {
   create: async (req, res) => {
-    const { periodo } = req.body;
+    const { periodo, diretorId: id } = req.body;
 
     try {
       const turnoFind = await Turno.findOne({ where: { periodo: periodo } });
 
       if (turnoFind) throw new Error("Turno já cadastrado.");
 
-      const turno = await Turno.create({ periodo: periodo });
+      const turno = await Turno.create(
+        { 
+          periodo: periodo,
+          diretorId:id
+        }
+      );
 
       return res
         .status(200)
@@ -20,19 +25,21 @@ const turnoController = {
   },
 
   update: async (req, res) => {
-    const { turnoId, periodo } = req.body;
+    const { turnoId, periodo,diretorId: id } = req.body;
 
     try {
-
       const turno = await Turno.findByPk(turnoId);
 
+      if (turno.diretorId != id)throw new Error(`Diretor não possuiur acesso a esse dado.`);
       if (!turno) throw new Error("Turno não cadastrado.");
 
       const turnoAtt = await turno.update({
         periodo: periodo,
       });
 
-      return res.status(200).json(`Turno criada com sucesso: ${turnoAtt.periodo}`);
+      return res
+        .status(200)
+        .json(`Turno criada com sucesso: ${turnoAtt.periodo}`);
     } catch (erro) {
       return res.json({ erro: erro.message });
     }
@@ -49,15 +56,20 @@ const turnoController = {
   },
 
   delete: async (req, res) => {
-    const { turnoId} = req.body;
+    const { turnoId,diretorId: id } = req.body;
 
+    
     try {
 
-        const turno = await Turno.findByPk(turnoId);
-  
-        if (!turno) throw new Error("Turno não cadastrado.");
+      const turno = await Turno.findByPk(turnoId);
 
-      return res.status(200).json(`Turno deletado com sucesso: ${turno.periodo}`);
+      if (turno.diretorId != id)throw new Error(`Diretor não possuiur acesso a esse dado.`);
+      
+      if (!turno) throw new Error("Turno não cadastrado.");
+
+      return res
+        .status(200)
+        .json(`Turno deletado com sucesso: ${turno.periodo}`);
     } catch (erro) {
       return res.json({ erro: erro.message });
     }

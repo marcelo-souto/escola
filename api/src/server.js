@@ -13,6 +13,9 @@ const materiaRoutes = require('./routes/materiaRoutes')
 const professorRoutes = require('./routes/professorRoutes')
 
 
+const materiaRoutes = require('./routes/materiaRoutes.js')
+
+
 // Variaveis
 const port = process.env.PORT;
 const server = express();
@@ -30,6 +33,7 @@ server.use('/', materiaRoutes)
 server.use('/', tokenRouts);
 server.use('/', diretorRoutes);
 server.use('/', professorRoutes)
+
 
 
 server.get('/', (req, res) => {

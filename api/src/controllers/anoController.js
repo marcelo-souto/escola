@@ -1,84 +1,70 @@
-const Ano = require('../models/Ano.js');
+const Ano = require("../models/Ano.js");
+const { Op } = require("sequelize");
+const validate = require("../functions/validate.js");
+const nodemailer = require("nodemailer");
+const { hash, compare } = require("bcrypt");
+const { sign, verify } = require("jsonwebtoken");
 
 const anoController = {
-	create: async (req, res) => {
-		const { anoLetivo } = req.body;
+  create: async (req, res) => {
+    const { anoLetivo, diretorId: id } = req.body;
 
-		if (!anoLetivo)
-			return res
-				.status(400)
-				.json({ erro: 'É obrigatório o envio da informação' });
+    try {
+      const findAno = await Ano.findOne({ where: { anoLetivo: anoLetivo } });
+      if (findAno) throw new Error("Ano letivo já existe");
 
-		try {
-			const anoExiste = await Ano.findOne({
-				where: {
-					anoLetivo: anoLetivo
-				}
-			});
+      const ano = await Ano.create({
+        anoLetivo: anoLetivo,
+        diretorId: id,
+      });
 
-			if (anoExiste)
-				return res.status(400).json({ erro: 'Este ano já está cadastrado.' });
+      return res.status(200).json(`Ano criada com sucesso: ${ano.anoLetivo}`);
+    } catch (erro) {
+      return res.json({ erro: erro.message });
+    }
+  },
 
-			const ano = await Ano.create({
-				anoLetivo: anoLetivo
-			});
+  update: async (req, res) => {
+    const { diretorId: id, anoId, anoLetivo } = req.body;
 
-			return res.status(200).json(`Ano criada com sucesso: ${ano.anoLetivo}`);
-		} catch (erro) {
-			return res.json({ erro: erro.message });
-		}
-	},
+    try {
+      const ano = await Ano.findByPk(anoId);
+      console.log(ano.anoId, id)
+      if (ano.diretorId != id)throw new Error(`Diretor não possuiur acesso a esse dado.`);
+      
+      const anoAtt = await ano.update({
+        anoLetivo: anoLetivo,
+      });
 
-	update: async (req, res) => {
-		const { id, anoLetivo } = req.body;
+      return res.status(200).json(`Ano criada com sucesso: ${ano.anoLetivo}`);
+    } catch (erro) {
+      return res.json({ erro: erro.message });
+    }
+  },
 
-		try {
-			const ano = await Ano.findByPk(id);
+  getAll: async (req, res) => {
+    try {
+      const ano = await Ano.findAll();
 
-			if (!ano)
-				return res.status(404).json({ erro: 'Informação não encontrada.' });
+      return res.status(200).json(ano);
+    } catch (erro) {
+      return res.json({ erro: erro.message });
+    }
+  },
 
-			const anoAtualizado = await ano.update({
-				anoLetivo: anoLetivo
-			});
+  delete: async (req, res) => {
+    const { diretorId: id, anoId } = req.body;
 
-			return res
-				.status(200)
-				.json(`Ano criada com sucesso: ${anoAtualizado.anoLetivo}`);
-		} catch (erro) {
-			return res.json({ erro: erro.message });
-		}
-	},
+    try {
+      const ano = await Ano.findOne(anoId);
+      if (ano.anoId != anoId)throw new Error(`Diretor não possuiur acesso a esse dado.`);
+      const anoDestroy = await ano.destroy();
 
-	getAll: async (req, res) => {
-		try {
-			const ano = await Ano.findAll();
-
-			return res.status(200).json(ano);
-		} catch (erro) {
-			return res.json({ erro: erro.message });
-		}
-	},
-
-	delete: async (req, res) => {
-		const { id } = req.body;
-
-		try {
-			const ano = await Ano.findByPk(id);
-
-			if (!ano)
-				return res.status(404).json({ erro: 'Informação não encontrada.' });
-
-			const anoDeletado = await ano.destroy();
-
-			return res
-				.status(200)
-				.json(`Ano deletado com sucesso: ${anoDeletado.anoLetivo}`);
-
-		} catch (erro) {
-			return res.json({ erro: erro.message });
-		}
-	}
+      return res.status(200).json(`Ano deletado com sucesso: ${ano}`);
+    } catch (erro) {
+      return res.json({ erro: erro.message });
+    }
+  },
 };
 
 module.exports = anoController;
