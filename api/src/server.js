@@ -13,9 +13,6 @@ const materiaRoutes = require('./routes/materiaRoutes')
 const professorRoutes = require('./routes/professorRoutes')
 
 
-const materiaRoutes = require('./routes/materiaRoutes.js')
-
-
 // Variaveis
 const port = process.env.PORT;
 const server = express();
