@@ -1,77 +1,60 @@
-const Turma = require('../models/Turma.js')
+const Turma = require('../models/Turma.js');
 
 const anoController = {
+	create: async (req, res) => {
+		const { turnoId, anoLetivo } = req.body;
 
-    create:async(req,res)=>{
+		try {
+			const turma = await Turma.create({
+				turnoId: turnoId,
+				anoId: anoLetivo
+			});
 
-        const {turnoId,anoLetivo} = req.body
+			return res.status(200).json(`Turma criada com sucesso: ${ano}`);
+		} catch (erro) {
+			return res.json({ erro: erro.message });
+		}
+	},
 
-        try {
+	update: async (req, res) => {
+		const { turmaId, turnoId, anoId } = req.body;
 
-            const turma = await Turma.create({
-                turnoId:turnoId,
-                anoId:anoLetivo
-            })
+		try {
+			const turma = await Turma.findOne(turmaId);
 
-            return res.status(200).json(`Turma criada com sucesso: ${ano}`)
-            
-        } catch (erro) {
-            return res.json({erro: erro.message})
-        }
-    },
+			const turmaAtt = turma.update({
+				turnoId: turnoId,
+				anoId: anoId
+			});
 
-    
-    update:async(req,res)=>{
+			return res.status(200).json(`Turma criada com sucesso: ${ano}`);
+		} catch (erro) {
+			return res.json({ erro: erro.message });
+		}
+	},
 
-        const {turmaId,turnoId,anoId} = req.body
-        
-        try {
+	getAll: async (req, res) => {
+		try {
+			const turma = await Turma.findAll();
 
-            const turma = await Turma.findOne(turmaId)
+			return res.status(200).json(`${turma}`);
+		} catch (erro) {
+			return res.json({ erro: erro.message });
+		}
+	},
 
-            const turmaAtt = turma.update({
-                turnoId:turnoId,
-                anoId:anoId
-            })
+	delete: async (req, res) => {
+		const { id } = req.body;
 
-            return res.status(200).json(`Turma criada com sucesso: ${ano}`)
-            
-        } catch (erro) {
-            return res.json({erro: erro.message})
-        }
-    },
+		try {
+			const turma = await Turma.findOne(id);
+			const turmaDestroy = await Turma.destroy();
 
+			return res.status(200).json(`Turma deletada com sucesso: ${turma}`);
+		} catch (erro) {
+			return res.json({ erro: erro.message });
+		}
+	}
+};
 
-    getAll:async(req,res)=>{
-
-        try {
-        
-            const turma = await Turma.findAll()
-    
-            return res.status(200).json(`${turma}`)
-
-        } catch (erro) {
-            return res.json({erro: erro.message})
-        }
-    },
-
-
-    delete:async(req,res)=>{
-        
-        const {id} = req.body
-
-        try {
-
-            const turma = await Turma.findOne(id)
-            const turmaDestroy = await Turma.destroy()
-    
-            return res.status(200).json(`Turma deletada com sucesso: ${turma}`)
-
-        } catch (erro) {
-            return res.json({erro: erro.message})
-        }
-    }
-    
-}
-
-module.exports = anoController
+module.exports = anoController;

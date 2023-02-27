@@ -1,9 +1,10 @@
 const sequelize = require("../database/database.js");
 const { DataTypes } = require("sequelize");
 const Diretor = require("./Diretor");
-console.log('aqui')
+
+
 const Materia = sequelize.define(
-  "materies",
+  "materias",
   {
     materiaId: {
       type: DataTypes.INTEGER,
@@ -29,7 +30,7 @@ const Materia = sequelize.define(
   }
 );
 
-Materia.sync({ force: true });
+// Materia.sync({ force: true });
 
 Materia.belongsTo(Diretor, { foreignKey: "diretorId" });
 Materia.hasOne(Diretor, { foreignKey: "diretorId" });
