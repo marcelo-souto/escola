@@ -12,7 +12,6 @@ const diretorRoutes = require('./routes/diretorRoutes.js')
 const materiaRoutes = require('./routes/materiaRoutes')
 const professorRoutes = require('./routes/professorRoutes')
 
-
 // Variaveis
 const port = process.env.PORT;
 const server = express();
