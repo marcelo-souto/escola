@@ -3,10 +3,10 @@ const turnoController = require('../controllers/turnoController.js')
 
 const router = Router()
 
-router.post('/ano/create', turnoController.create)
-router.put('/ano/atualization', turnoController.update)
-router.get('/ano/getall', turnoController.getAll)
-router.delete('/ano/delete', turnoController.delete)
+router.post('/turno/create', turnoController.create)
+router.put('/turno/update', turnoController.update)
+router.get('/turno/get', turnoController.get)
+router.delete('/turno/delete', turnoController.delete)
 
 
 module.exports = router

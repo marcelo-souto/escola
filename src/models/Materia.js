@@ -1,9 +1,9 @@
 const sequelize = require("../database/database.js");
 const { DataTypes } = require("sequelize");
 const Diretor = require("./Diretor");
-console.log('aqui')
+
 const Materia = sequelize.define(
-  "materies",
+  "materias",
   {
     materiaId: {
       type: DataTypes.INTEGER,
