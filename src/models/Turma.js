@@ -30,12 +30,14 @@ const Turma = sequelize.define(
         allowNull: false,
       },
     },
+    numeroFinal: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
 
     codigo: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        return this.turnoId * 1000 + this.anoId * 100 + this.id;
-      },
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
   },
   {

@@ -3,10 +3,9 @@ const turmaController = require('../controllers/turmaController.js')
 
 const router = Router()
 
-router.post('/ano/create', turmaController.create)
-router.put('/ano/atualization', turmaController.update)
-router.get('/ano/getall', turmaController.getAll)
-router.delete('/ano/delete', turmaController.delete)
-
+router.post('/turma/create', turmaController.create)
+router.put('/turma/atualization', turmaController.update)
+router.get('/turma/getall', turmaController.getAll)
+router.delete('/turma/delete', turmaController.delete)
 
 module.exports = router

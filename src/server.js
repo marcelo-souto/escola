@@ -8,8 +8,8 @@ const anoRoutes = require('./routes/anoRoutes.js');
 const turnosRoutes = require('./routes/turnosRoutes.js');
 const turmasRoutes = require('./routes/turmasRoutes.js');
 const tokenRouts = require('./routes/tokenRoutes.js')
-const diretorRoutes = require('./routes/dirtorRoutes.js')
-
+const diretorRoutes = require('./routes/diretorRoutes.js')
+const materiaRoutes = require('./routes/materiaRoutes.js')
 
 // Variaveis
 const port = process.env.PORT;
@@ -26,6 +26,7 @@ server.use('/', turnosRoutes);
 server.use('/', turmasRoutes);
 server.use('/', tokenRouts);
 server.use('/', diretorRoutes);
+server.use('/', materiaRoutes);
 
 
 server.get('/', (req, res) => {

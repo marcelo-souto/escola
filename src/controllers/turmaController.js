@@ -1,33 +1,48 @@
 const Turma = require('../models/Turma.js')
+const Turno = require("../models/Turnos.js");
+const Ano = require('../models/Ano.js');
 
 const anoController = {
 
     create:async(req,res)=>{
 
-        const {turnoId,anoLetivo} = req.body
+        const {turnoId,anoId,numeroFinal} = req.body
 
         try {
 
+            const turno = await Turno.findByPk(turnoId);
+            if (!turno) throw new Error("Turno não cadastrado.");
+
+            const ano = await Ano.findByPk(anoId);
+            if (!ano) throw new Error("Turno não cadastrado.");
+        
+            const cod = turnoId* 1000 + anoId * 100 + numeroFinal
+
+            const validTurma = await Turma.findOne({where:{codigo:cod}});
+            console.log(validTurma)
+            if (validTurma) throw new Error("Turma ja criada.");
+
             const turma = await Turma.create({
                 turnoId:turnoId,
-                anoId:anoLetivo
+                anoId:anoId,
+                numeroFinal:numeroFinal,
+                codigo:cod
             })
 
-            return res.status(200).json(`Turma criada com sucesso: ${ano}`)
+            return res.status(200).json(`Turma criada com sucesso: ${turma.codigo}`)
             
         } catch (erro) {
             return res.json({erro: erro.message})
         }
     },
 
-    
     update:async(req,res)=>{
 
         const {turmaId,turnoId,anoId} = req.body
         
         try {
 
-            const turma = await Turma.findOne(turmaId)
+            const turma = await Turma.findByPk(turmaId)
 
             const turmaAtt = turma.update({
                 turnoId:turnoId,

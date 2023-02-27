@@ -29,7 +29,7 @@ const Materia = sequelize.define(
   }
 );
 
-Materia.sync({ force: true });
+// Materia.sync({ force: true });
 
 Materia.belongsTo(Diretor, { foreignKey: "diretorId" });
 Materia.hasOne(Diretor, { foreignKey: "diretorId" });

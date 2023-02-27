@@ -1,29 +1,70 @@
-const Materia = require('../models/Materia.js')
+const Materia = require("../models/Materia.js");
 
-require('dotenv').config()
+const materiaController = {
+  create: async (req, res) => {
+    const { diretorId, nome } = req.body;
 
-const tokenController = {
-	create: async (req, res) => {
-		const { id,nome } = req.body;
+    try {
+      const materiaExiste = await Materia.findOne({ where: { nome: nome } });
+      if (materiaExiste) throw new Error("Materia ja cadastrada.");
 
-		try {
+      const materia = await Materia.create({
+        nome: nome,
+        diretorId: diretorId,
+      });
 
-			const materia = Materia.create(
+      return res.status(200).json(materia);
+    } catch (erro) {
+      return res.json({ erro: erro.message });
+    }
+  },
 
-                {
-                    nome:nome,
-                    diretorId:id
-                }
+  get: async (req, res) => {
+    const { materiaId } = req.body;
 
-            );
+    try {
+      const materia = await Materia.findAll();
+      if (!materia) throw new Error("Materia não cadastrada -.");
 
-			return res.status(200).json(materia);
+      return res.status(200).json(materia);
+    } catch (erro) {
+      return res.json({ erro: erro.message });
+    }
+  },
 
-		} catch (error) {
-			return res.status(401).json(false);
-		}
-	}
+  update: async (req, res) => {
+    const { materiaId, nome } = req.body;
 
+    try {
+      const materiaExiste = await Materia.findOne({
+        where: { materiaId: materiaId },
+      });
+      if (!materiaExiste) throw new Error("Materia não cadastrada.");
+
+      const materia = await materiaExiste.update({
+        nome: nome,
+      });
+
+      return res.status(200).json(materia);
+    } catch (erro) {
+      return res.json({ erro: erro.message });
+    }
+  },
+
+  delete: async (req, res) => {
+    const { materiaId } = req.body;
+
+    try {
+      const materiaExiste = await Materia.findByPk(materiaId);
+      if (!materiaExiste) throw new Error("Materia não cadastrada.");
+
+      const materia = await materiaExiste.destroy();
+
+      return res.status(200).json("Matéria " + materia + "deletada com sucesso");
+    } catch (erro) {
+      return res.json({ erro: erro.message });
+    }
+  },
 };
 
-module.exports = tokenController
+module.exports = materiaController;
