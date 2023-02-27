@@ -7,7 +7,7 @@ const Diretor = require('./Diretor')
 const Turma = sequelize.define(
   "turmas",
   {
-    id: {
+    turmaId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
