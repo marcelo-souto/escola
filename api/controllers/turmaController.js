@@ -6,7 +6,7 @@ const anoController = {
 
     create:async(req,res)=>{
 
-        const {turnoId,anoId,numeroFinal} = req.body
+        const {turnoId,anoId,numeroFinal,diretorId: id } = req.body
 
         try {
 
