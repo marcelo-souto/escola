@@ -4,30 +4,34 @@ const logger = require('./functions/logger.js');
 const path = require('path');
 require('dotenv').config();
 
-const anoRoutes = require('./routes/anoRoutes.js');
-const turnosRoutes = require('./routes/turnosRoutes.js');
-const turmasRoutes = require('./routes/turmasRoutes.js');
-const tokenRouts = require('./routes/tokenRoutes.js')
-const diretorRoutes = require('./routes/diretorRoutes.js')
-const materiaRoutes = require('./routes/materiaRoutes.js')
+const administradorRoutes = require('./routes/administradorRoutes.js');
+const clienteRoutes = require('./routes/clienteRoutes.js');
+const filmeRoutes = require('./routes/filmeRoutes.js');
+const generoRoutes = require('./routes/generoRoutes.js');
+const salaRoutes = require('./routes/salaRoutes.js');
+const diaRoutes = require('./routes/diaRoutes.js');
+const sessaoRoutes = require('./routes/sessaoRoutes.js')
+const tokenRoutes = require('./routes/tokenRoutes.js')
 
 // Variaveis
 const port = process.env.PORT;
 const server = express();
 
 // Middlewares
+server.use(express.static(path.join(__dirname, '../public')));
 server.use(cors())
 server.use(express.json());
 server.use(logger);
 
 // Rotas
-server.use('/', anoRoutes);
-server.use('/', turnosRoutes);
-server.use('/', turmasRoutes);
-server.use('/', tokenRouts);
-server.use('/', diretorRoutes);
-server.use('/', materiaRoutes);
-
+server.use('/', administradorRoutes);
+server.use('/', clienteRoutes);
+server.use('/', filmeRoutes);
+server.use('/', generoRoutes);
+server.use('/', salaRoutes);
+server.use('/', diaRoutes);
+server.use('/', sessaoRoutes);
+server.use('/', tokenRoutes)
 
 server.get('/', (req, res) => {
 	return res.send('<h1>Servidor rodando ...<h1>');

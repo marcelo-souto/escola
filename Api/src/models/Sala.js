@@ -1,22 +1,25 @@
 const sequelize = require('../database/database.js');
 const { DataTypes } = require('sequelize');
-const Cliente = require('./Cliente');
 
-const Token = sequelize.define(
-	'tokens',
+const Sala = sequelize.define(
+	'salas',
 	{
-		tokenId: {
+		salaId: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
 			allowNull: false
 		},
-		usuarioId: {
-			type: DataTypes.STRING,
+		numero: {
+			type: DataTypes.INTEGER,
 			allowNull: false
 		},
-		token: {
-			type: DataTypes.STRING,
+		totalAssentos: {
+			type: DataTypes.INTEGER,
+			allowNull: false
+		},
+		totalFilas: {
+			type: DataTypes.INTEGER,
 			allowNull: false
 		}
 	},
@@ -25,7 +28,4 @@ const Token = sequelize.define(
 	}
 );
 
-
-// Token.sync({ force: true });
-
-module.exports = Token;
+module.exports = Sala;

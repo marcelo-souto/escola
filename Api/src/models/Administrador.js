@@ -1,22 +1,29 @@
 const sequelize = require('../database/database.js');
 const { DataTypes } = require('sequelize');
-const Cliente = require('./Cliente');
 
-const Token = sequelize.define(
-	'tokens',
+const Administrador = sequelize.define(
+	'administradores',
 	{
-		tokenId: {
+		administradorId: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
 			allowNull: false
 		},
-		usuarioId: {
+		nome: {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
-		token: {
+		email: {
 			type: DataTypes.STRING,
+			allowNull: false
+		},
+		senha: {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
+		emailVerificado: {
+			type: DataTypes.BOOLEAN,
 			allowNull: false
 		}
 	},
@@ -25,7 +32,6 @@ const Token = sequelize.define(
 	}
 );
 
+// Administrador.sync({ force: true });
 
-// Token.sync({ force: true });
-
-module.exports = Token;
+module.exports = Administrador;
