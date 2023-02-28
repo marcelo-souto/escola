@@ -89,7 +89,6 @@ const anoController = {
 
     try {
 
-        console.log(turmaId)
 
       const turma = await Turma.findByPk( turmaId);
 
