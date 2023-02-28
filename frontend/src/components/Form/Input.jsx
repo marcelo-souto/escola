@@ -3,48 +3,47 @@ import { Form } from 'react-bootstrap';
 import Error from '../../helpers/Error';
 import styles from './Input.module.css';
 
-function Input({
-	onChange,
-	onBlur,
-	value,
-	setValue,
-	error,
-	type,
-	placeholder,
-	label,
-	disabled,
-	id,
-	as,
-	mask,
-	min,
-	max,
-	ref
-}) {
+	// onChange,
+	// onBlur,
+	// value,
+	// setValue,
+	// error,
+	// type,
+	// placeholder,
+	// label,
+	// disabled,
+	// id,
+	// as,
+	// mask,
+	// min,
+	// max,
+
+const Input = React.forwardRef((props, ref) => {
 	return (
 		<div className={styles.container}>
 			<Form.Group
 				className={styles.subContainer}
-				controlId={id}
+				controlId={props.id}
 			>
-				<Form.Label className={styles.label}>{label}</Form.Label>
+				<Form.Label className={styles.label}>{props.label}</Form.Label>
 				<Form.Control
-					as={as}
-					mask={mask}
+					as={props.as}
 					ref={ref}
+					mask={props.mask}
 					className={styles.input}
-					onChange={onChange}
-					onBlur={onBlur}
-					value={value}
-					type={type}
-					placeholder={placeholder}
-					disabled={disabled}
-					min={min}
-					max={max}
+					onChange={props.onChange}
+					onBlur={props.onBlur}
+					value={props.value}
+					type={props.type}
+					placeholder={props.placeholder}
+					disabled={props.disabled}
+					min={props.min}
+					max={props.max}
 				/>
 			</Form.Group>
-			{error && <Error margin={4}>{error}</Error>}
+			{props.error && <Error margin={4}>{props.error}</Error>}
 		</div>
 	);
-}
+})
 
 export default Input;

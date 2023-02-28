@@ -4,21 +4,57 @@ import { Form } from 'react-bootstrap';
 import Input from '../Form/Input';
 import useForm from '../../hooks/useForm';
 import Button from '../Form/Button';
-import { IMaskInput } from 'react-imask';
+import { POST_CREATE_DIRETOR } from '../../api/api'
+import useFetch from '../../hooks/useFetch'
+import { useNavigate } from 'react-router-dom'
+import Error from '../../helpers/Error'
 
 // nome, cpf, dataNascimento, telefone, email, senha
 
 function LoginRegister() {
+
+	const { data, loading, error, request } = useFetch()
+
+	const navigate = useNavigate()
+
 	const nome = useForm();
-	const dataNascimento = useForm();
-  const cpfRef = React.forwardRef()
-	const telRef = React.forwardRef()
+	const dataNascimento = useForm('data');
+	const cpf = useForm('cpf')
+	const telefone = useForm('telefone')
 	const email = useForm('email');
 	const senha = useForm('senha');
 
+	async function handleSubmit(e) {
+
+		e.preventDefault()
+
+		if (nome.validate() && 
+			cpf.validate() && 
+			telefone.validate() && 
+			email.validate() && 
+			senha.validate() && 
+			dataNascimento.validate()) {
+
+			const { url, options } = POST_CREATE_DIRETOR({
+				nome: nome.value,
+				email: email.value,
+				senha: senha.value,
+				telefone: telefone.value,
+				cpf: cpf.value,
+				dataNascimento: dataNascimento.value
+			})
+
+			const { json, response } = await request(url, options)
+
+			if (response.ok) navigate('/login')
+		}
+
+	}
+
 	return (
 		<div>
-			<Form>
+			<h1 className='titulo'>Cadastre-se</h1>
+			<Form onSubmit={handleSubmit}>
 				<Input
 					label='Nome:'
 					id='nome'
@@ -33,35 +69,32 @@ function LoginRegister() {
 				<Input
 					label='CPF:'
 					id='cpf'
-          ref={cpfRef}
-          as={IMaskInput}
-          mask='000.000.000-00'
+					{...cpf}
 					placeholder='000.000.000-00'
 				/>
 				<div className={styles.inputContainer}>
 					<Input
 						label='Telefone:'
 						id='telefone'
-            ref={telRef}
-            as={IMaskInput}
-            mask='00 00000-0000'
-            placeholder='00 00000-0000'
+						{...telefone}
+						placeholder='00 00000-0000'
 					/>
 					<Input
 						label='Data de nascimento:'
 						id='dataNascimento'
 						{...dataNascimento}
-            max='2005-01-01'
+						max='2005-01-01'
 						type='date'
 					/>
 				</div>
 				<Input
 					label='senha:'
 					id='senha'
-          type='password'
+					type='password'
 					{...senha}
 				/>
-				<Button>Enviar</Button>
+				{error && <Error>{error}</Error>}
+				<Button loading={loading}>Enviar</Button>
 			</Form>
 		</div>
 	);

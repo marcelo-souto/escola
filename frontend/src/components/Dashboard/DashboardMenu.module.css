@@ -1,0 +1,31 @@
+.menu {
+    background: #f8f8f8;
+    height: 100%;
+    padding: 32px
+}
+
+.menu ul {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+}
+
+.button {
+    display: block;
+    padding: 16px 32px;
+    background: #ececec;
+    border-radius: 8px;
+    color: #4d4d4d;
+    font-weight: 600;
+    transition: all .3s;
+}
+
+.button:hover {
+    background: #0d6efd;
+    color: #FFF;
+}
+
+:global(.active) {
+    background: linear-gradient(to right, #1975ff, #0167ff);
+    color: #FFF;
+}

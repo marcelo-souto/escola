@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 
 import Login from '../components/Login/Login';
 import LoginRegister from '../components/Login/LoginRegister';
@@ -7,8 +7,12 @@ import LoginResetPassword from '../components/Login/LoginResetPassword';
 
 import styles from './LoginPage.module.css';
 import EstudanteImagem from '../img/estudante2.jpg';
+import { UserContext } from '../context/UserContext';
 
 function LoginPage() {
+	const { loggedIn } = React.useContext(UserContext)
+
+	if (loggedIn) return <Navigate to='/dashboard' />
 	return (
 		<div className={styles.container}>
 			<div>

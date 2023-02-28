@@ -40,6 +40,7 @@ function Login() {
 					</Link>
 					<Input
 						{...senha}
+						type='password'
 						id='senha'
 						label='Senha:'
 					/>

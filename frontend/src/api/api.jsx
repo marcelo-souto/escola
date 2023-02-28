@@ -52,4 +52,17 @@ const POST_RESET_PASSWORD = (body) => {
 	};
 };
 
-export { POST_TOKEN, GET_USER, POST_VALIDATE_TOKEN, POST_RESET_PASSWORD };
+const POST_CREATE_DIRETOR = (body) => {
+	return {
+		url: API_URL + '/diretor/create',
+		options: {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(body)
+		}
+	};
+}
+
+export { POST_TOKEN, GET_USER, POST_VALIDATE_TOKEN, POST_RESET_PASSWORD, POST_CREATE_DIRETOR };
