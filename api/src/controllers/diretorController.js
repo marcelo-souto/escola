@@ -318,7 +318,7 @@ const diretorController = {
 
 			return res
 				.status(200)
-				.json({ message: 'Email de recuperação se senha enviado.' });
+				.json({ message: 'Email de recuperação de senha enviado com sucesso.' });
 		} catch (erro) {
 			return res.status(400).json({ erro: erro.message });
 		}

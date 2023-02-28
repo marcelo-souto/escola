@@ -1,0 +1,14 @@
+.container {
+  margin-bottom: 12px;
+}
+
+.label {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #141414;
+}
+
+.input {
+  margin-top: 0px;
+  margin-bottom: 6px;
+}

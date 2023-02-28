@@ -1,0 +1,104 @@
+img {
+  display: block;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body, p, h1, h2, h3, h4, ul, li {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none !important;
+  display: block !important;
+}
+
+.page {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.content {
+  min-height: calc(100vh - 116px);
+}
+
+.container {
+  max-width: 1140px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.titulo {
+  font-size: 2rem;
+  color: #3b3b3b;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.titulo::before {
+  content: '';
+  width: 32px;
+  height: 32px;
+  display: block;
+  background: url('../img/layers.svg') no-repeat center center;
+  margin-bottom: 12px;
+}
+
+/* Animations */
+
+.comeFromLeft {
+  transform: translateX(-40px);
+  opacity: 0;
+  animation: comeFromLeft 0.3s forwards;
+}
+
+@keyframes comeFromLeft {
+  to {
+    transform: initial;
+    opacity: initial;
+  }
+}
+
+.comeFromRight {
+  transform: translateX(40px);
+  opacity: 0;
+  animation: comeFromRight 0.3s forwards;
+}
+
+@keyframes comeFromRight {
+  to {
+    transform: initial;
+    opacity: initial;
+  }
+}
+
+.comeFromBottom {
+  transform: translateY(40px);
+  opacity: 0;
+  animation: comeFromBottom 0.3s forwards;
+}
+
+@keyframes comeFromBottom {
+  to {
+    transform: initial;
+    opacity: initial;
+  }
+}
+
+.comeFromTop {
+  transform: translateY(-40px);
+  opacity: 0;
+  animation: comeFromTop 0.3s forwards;
+}
+
+@keyframes comeFromTop {
+  to {
+    transform: initial;
+    opacity: initial;
+  }
+}

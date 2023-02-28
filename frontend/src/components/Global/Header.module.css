@@ -1,0 +1,10 @@
+.headerContainer {
+  background: #f5f5f5;
+}
+
+.header {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	padding-top: 18px;
+	padding-bottom: 18px;
+}
