@@ -8,7 +8,7 @@ const { Op } = require('sequelize');
 const validate = require('../functions/validate.js');
 const nodemailer = require('nodemailer');
 const { hash, compare } = require('bcrypt');
-const { sign, verify } = require('jsonwebtoken');
+const  { sign, verify } = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
 dotenv.config();
