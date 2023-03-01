@@ -49,6 +49,21 @@ a {
   margin-bottom: 12px;
 }
 
+.titulo-2 {
+  font-size: 1.5rem;
+  color: #666666;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.titulo-3 {
+  font-size: 2rem;
+  color: #3b3b3b;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+
 /* Animations */
 
 .comeFromLeft {

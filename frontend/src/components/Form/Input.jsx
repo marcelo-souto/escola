@@ -3,21 +3,6 @@ import { Form } from 'react-bootstrap';
 import Error from '../../helpers/Error';
 import styles from './Input.module.css';
 
-	// onChange,
-	// onBlur,
-	// value,
-	// setValue,
-	// error,
-	// type,
-	// placeholder,
-	// label,
-	// disabled,
-	// id,
-	// as,
-	// mask,
-	// min,
-	// max,
-
 const Input = React.forwardRef((props, ref) => {
 	return (
 		<div className={styles.container}>

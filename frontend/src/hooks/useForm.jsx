@@ -2,7 +2,8 @@ import React from 'react';
 
 const types = {
 	cpf: {
-		regex: /([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/,
+		regex:
+			/([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/,
 		message: 'Insira um cpf válido'
 	},
 	email: {
@@ -24,7 +25,7 @@ const types = {
 		message: 'Utilize apenas números'
 	},
 	telefone: {
-		regex: /^[1-9]{2}(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$/,
+		regex: /^[1-9]{2}\s?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$/,
 		message: 'Insira um número de telefone válido'
 	},
 	data: {
@@ -38,38 +39,37 @@ const types = {
 };
 
 function useForm(type) {
-  const [value, setValue] = React.useState('');
-  const [error, setError] = React.useState(null);
+	const [value, setValue] = React.useState('');
+	const [error, setError] = React.useState(null);
 
-  function validate(value) {
-    if (type === false) return true;
+	function validate(value) {
+		if (type === false) return true;
 
-    if (value.length === 0) {
-      setError('Campo Vazio.');
-      return false;
+		if (value.length === 0) {
+			setError('Campo Vazio.');
+			return false;
+		} else if (types[type] && !types[type].regex.test(value)) {
+			setError(types[type].message);
+			return false;
+		} else {
+			setError(null);
+			return true;
+		}
+	}
 
-    } else if (types[type] && !types[type].regex.test(value)) {
-      setError(types[type].message);
-      return false;
-			
-    } else {
-      setError(null);
-      return true;
-    }
-  }
+	function onChange({ target }) {
+		if (error) validate(target.value);
+		setValue(target.value);
+	}
 
-  function onChange({ target }) {
-    if (error) validate(target.value);
-    setValue(target.value);
-  }
-
-  return {
-    value,
-    onChange,
-    error,
-    onBlur: () => validate(value),
-    validate: () => validate(value),
-  };
+	return {
+		value,
+		onChange,
+		error,
+		setValue,
+		onBlur: () => validate(value),
+		validate: () => validate(value)
+	};
 }
 
 export default useForm;

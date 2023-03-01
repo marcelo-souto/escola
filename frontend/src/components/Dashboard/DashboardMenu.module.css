@@ -1,23 +1,26 @@
 .menu {
-    background: #f8f8f8;
+    background: hsl(217, 23%, 95%);
     height: 100%;
-    padding: 32px
+    padding: 42px;
 }
 
 .menu ul {
     list-style: none;
     display: grid;
-    gap: 12px;
+    gap: 20px;
 }
 
 .button {
     display: block;
-    padding: 16px 32px;
-    background: #ececec;
+    padding: 16px 24px;
+    background: hsl(0, 0%, 98%);
     border-radius: 8px;
-    color: #4d4d4d;
+    color: #6c6c6c;
     font-weight: 600;
     transition: all .3s;
+    display: flex !important;
+    align-items: center;
+    box-shadow: -1px 2px 0px 2px #d5d5d538;
 }
 
 .button:hover {
@@ -26,6 +29,26 @@
 }
 
 :global(.active) {
-    background: linear-gradient(to right, #1975ff, #0167ff);
+    background: linear-gradient(45deg, #287eff, #0167ff);
     color: #FFF;
+}
+
+.button::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    display: block;
+    border-radius: 50%;
+    border: 2px solid #00000022;
+    margin-right: 12px;
+}
+
+.button:hover::before {
+    box-shadow: inset 0 0 0 3px #1975ff;
+    border-color: #ffffff;
+}
+
+:global(.active).button::before {
+    box-shadow: inset 0 0 0 3px #1975ff, inset 0 0 0 6px #ffffff;
+    border-color: #ffffff;
 }

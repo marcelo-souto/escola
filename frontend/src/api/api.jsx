@@ -52,6 +52,19 @@ const POST_RESET_PASSWORD = (body) => {
 	};
 };
 
+const POST_RESEND_EMAIL = (body) => {
+	return {
+		url: API_URL + '/diretor/resendemail',
+		options: {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(body)
+		}
+	};
+};
+
 const POST_CREATE_DIRETOR = (body) => {
 	return {
 		url: API_URL + '/diretor/create',
@@ -63,6 +76,79 @@ const POST_CREATE_DIRETOR = (body) => {
 			body: JSON.stringify(body)
 		}
 	};
-}
+};
 
-export { POST_TOKEN, GET_USER, POST_VALIDATE_TOKEN, POST_RESET_PASSWORD, POST_CREATE_DIRETOR };
+const GET_PROFESSORES_BY_DIRETOR = () => {
+	return {
+		url: API_URL + '/diretor/get?include=professores',
+		options: {
+			method: 'GET',
+			headers: {
+				Authorization: 'Bearer ' + window.localStorage.getItem('token')
+			}
+		}
+	};
+};
+
+const POST_CREATE_PROFESSOR = (body) => {
+	return {
+		url: API_URL + '/professor/create',
+		options: {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + window.localStorage.getItem('token')
+			},
+			body: JSON.stringify(body)
+		}
+	};
+};
+
+const POST_UPDATE_PROFESSOR = (body) => {
+	return {
+		url: API_URL + '/professor/update',
+		options: {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + window.localStorage.getItem('token')
+			},
+			body: JSON.stringify(body)
+		}
+	};
+};
+
+const DELETE_DELETE_PROFESSOR = (id) => {
+	return {
+		url: API_URL + '/professor/delete/' + id,
+		options: {
+			method: 'DELETE',
+			headers: {
+				Authorization: 'Bearer ' + window.localStorage.getItem('token')
+			}
+		}
+	};
+};
+
+const GET_MATERIAS = () => {
+	return {
+		url: API_URL + '/materia/get',
+		options: {
+			method: 'GET'
+		}
+	};
+};
+
+export {
+	POST_TOKEN,
+	GET_USER,
+	POST_VALIDATE_TOKEN,
+	POST_RESET_PASSWORD,
+	POST_CREATE_DIRETOR,
+	POST_RESEND_EMAIL,
+	GET_PROFESSORES_BY_DIRETOR,
+	GET_MATERIAS,
+	POST_CREATE_PROFESSOR,
+	POST_UPDATE_PROFESSOR,
+	DELETE_DELETE_PROFESSOR
+};

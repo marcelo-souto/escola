@@ -1,0 +1,31 @@
+.background {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background: #00000020;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  opacity: 0;
+  animation: scale .3s ease-in-out forwards;
+}
+
+.modal {
+  padding: 46px;
+  background: #f7f7f7;
+  border-radius: 12px;
+  max-width: 800px;
+  transform: scale(0.8);
+  opacity: 0;
+  animation: scale .3s ease-in-out forwards;
+}
+
+@keyframes scale {
+  to {
+    transform: initial;
+    opacity: initial;
+  }
+}
