@@ -1,0 +1,22 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
+}
+
+.container > div {
+  height: 100%;
+}
+
+.container > div > img {
+  object-fit: cover;
+  object-position: center;
+  height: 100%;
+}
+
+.formContainer {
+  display: grid;
+  max-width: 560px;
+  align-items: center;
+  padding: 82px;
+}

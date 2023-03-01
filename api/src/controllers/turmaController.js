@@ -12,7 +12,7 @@ const anoController = {
       if (!turno) throw new Error("Turno não cadastrado.");
 
       const ano = await Ano.findByPk(anoId);
-      if (!ano) throw new Error("Turno não cadastrado.");
+      if (!ano) throw new Error("Ano não cadastrado.");
 
       const cod = turnoId * 1000 + anoId * 100 + numeroFinal;
 

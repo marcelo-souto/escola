@@ -9,7 +9,7 @@ route.get('/professor/att/:token', professorController.getAutenticate);
 route.post('/professor/auth', professorController.auth);
 route.get('/professor/get', checkToken, professorController.getInfo)
 route.put('/professor/update', checkToken, professorController.update)
-route.delete('/professor/delete', checkToken, professorController.delete)
+route.delete('/professor/delete/:professorId', checkToken, professorController.delete)
 
 route.post('/professor/resetpassword', professorController.resetPassword)
 route.post('/professor/changepassword', checkToken, professorController.changePassword)
