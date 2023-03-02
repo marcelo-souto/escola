@@ -5,6 +5,7 @@ import { UserContext } from '../../context/UserContext';
 import { ReactComponent as LogoImage } from '../../img/layers.svg';
 import { ReactComponent as Seta } from '../../img/arrow.svg';
 import { ReactComponent as Sair } from '../../img/sair.svg';
+import Button from '../Form/Button';
 
 function Header() {
 	const { user, loggedIn, userLogout } = React.useContext(UserContext);
@@ -23,7 +24,7 @@ function Header() {
 	return (
 		<header className={styles.headerContainer}>
 			<div className={styles.header}>
-				<Link to=''>
+				<Link to='login'>
 					<LogoImage width='28' />
 				</Link>
 				<nav>
@@ -59,7 +60,11 @@ function Header() {
 							/>
 						</div>
 					)}
-					{!loggedIn && <Link to='/login'>Login</Link>}
+					{!loggedIn && (
+						<Link to='/login'>
+							<Button variant='outline-primary'>Login</Button>
+						</Link>
+					)}
 					{loggedIn && menu && location.pathname.includes('dashboard') && (
 						<div
 							className={styles.headerMenu}

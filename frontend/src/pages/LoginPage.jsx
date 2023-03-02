@@ -9,6 +9,8 @@ import styles from './LoginPage.module.css';
 import EstudanteImagem from '../img/estudante2.jpg';
 import { UserContext } from '../context/UserContext';
 
+import PageNotFound from './PageNotFound';
+
 function LoginPage() {
 	const { loggedIn } = React.useContext(UserContext)
 
@@ -35,6 +37,10 @@ function LoginPage() {
 						path='/resetpassword'
 						element={<LoginResetPassword />}
 					/>
+					<Route
+					path='*'
+					element={<PageNotFound />}
+				/>
 				</Routes>
 			</div>
 		</div>

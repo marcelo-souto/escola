@@ -21,6 +21,7 @@ import ProtectedRoute from './helpers/ProtectedRoute';
 
 // CSS
 import './styles/global.css';
+import PageNotFound from './pages/PageNotFound';
 
 function App() {
 	return (
@@ -30,11 +31,7 @@ function App() {
 				<div className='content'>
 					<Routes>
 						<Route
-							path=''
-							element={<HomePage />}
-						/>
-						<Route
-							path='login/*'
+							path='/login/*'
 							element={<LoginPage />}
 						/>
 						<Route
@@ -44,6 +41,10 @@ function App() {
 									<DashboardPage />
 								</ProtectedRoute>
 							}
+						/>
+						<Route
+							path='*'
+							element={<PageNotFound />}
 						/>
 					</Routes>
 				</div>

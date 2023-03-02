@@ -10,7 +10,7 @@ const { hash, compare } = require('bcrypt');
 const { sign, verify } = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
-const Turma = require('../models/Turma.js')
+const Turma = require('../models/Turma.js');
 const Professor = require('../models/Professor.js');
 const Materia = require('../models/Materia.js');
 
@@ -95,7 +95,7 @@ const diretorController = {
 			await transporter.sendMail({
 				text: 'Autenticação',
 				subject: 'Confirme seu email',
-				from: `Cinema <nodecinemapc2@gmail.com>`,
+				from: `Elite <nodecinemapc2@gmail.com>`,
 				to: `${diretor.email}`,
 				html: emailConfirmationTemplate(
 					'diretor',
@@ -196,18 +196,26 @@ const diretorController = {
 
 		try {
 			const diretor = await Diretor.findByPk(id, {
-				include: {
-					model: Professor,
-					as: 'professores',
-					include: [
-						{
-							model: Materia
+				include: [
+					{
+						model: Professor,
+						as: 'professores',
+						attributes: {
+							exclude: 'senha'
 						},
-						{
-							model: Turma
-						}
-					]
-				},
+						include: [
+							{
+								model: Materia
+							},
+							{
+								model: Turma
+							}
+						]
+					},
+					{
+						model: Turma
+					}
+				],
 				attributes: {
 					exclude: ['senha', 'emailVerificado']
 				}
@@ -330,7 +338,7 @@ const diretorController = {
 			await transporter.sendMail({
 				text: 'Recuperação de Senha',
 				subject: 'Recupere sua Senha',
-				from: `Cinema <nodecinemapc2@gmail.com>`,
+				from: `Elite <nodecinemapc2@gmail.com>`,
 				to: `${diretor.email}`,
 				html: emailRecoverPasswordTemplate(senha)
 			});
@@ -426,7 +434,7 @@ const diretorController = {
 			await transporter.sendMail({
 				text: 'Autenticação',
 				subject: 'Confirme seu email',
-				from: `Cinema <nodecinemapc2@gmail.com>`,
+				from: `Elite <nodecinemapc2@gmail.com>`,
 				to: `${diretor.email}`,
 				html: emailConfirmationTemplate(
 					'diretor',
