@@ -1,0 +1,17 @@
+.aviso {
+	background-color: #eff2f5;
+	position: absolute;
+	top: 96px;
+	right: 20px;
+  padding: 16px;
+  border-radius: 12px;
+  transform: scale(0.6);
+  animation: scale .3s ease-in-out forwards;
+	font-weight: 600;
+}
+
+@keyframes scale {
+  to {
+    transform: initial;
+  }
+}

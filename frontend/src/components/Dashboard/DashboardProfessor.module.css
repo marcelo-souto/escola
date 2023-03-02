@@ -1,0 +1,29 @@
+.container {
+	padding: 64px;
+}
+
+.title {
+	font-weight: 700;
+}
+
+.title::before {
+	content: '';
+	width: 52px;
+	height: 52px;
+	display: block;
+	background: url('../../img/chapeu.svg') no-repeat center center;
+	background-size: contain;
+}
+
+.lista {
+	background-color: #eff2f5;
+	padding: 32px;
+	border-radius: 12px;
+	display: grid;
+	margin-top: 46px;
+}
+
+.lista > div:nth-child(1) {
+	justify-self: end;
+	width: max-content;
+}
