@@ -26,4 +26,5 @@
 .lista > div:nth-child(1) {
 	justify-self: end;
 	width: max-content;
+
 }
