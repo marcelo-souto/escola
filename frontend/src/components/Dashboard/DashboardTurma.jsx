@@ -21,7 +21,7 @@ const DashboardTurma = () => {
   const [ano, setAno] = React.useState();
   const [modalVisible, setModalVisible] = React.useState(false);
   const [anoEscolar, setAnoEscolar] = React.useState(0);
-  const [turnoEscolar, setTurnoEscolar] = React.useState(0);
+  const [turnoEscolar, setTurnoEscolar] =  React.useState(0);
   const [turmaFinal, setTurmaFinal] = React.useState(0);
   const [numeroTurma, setNumeroTurma] = React.useState(0);
   const [modalMessage, setModalMessage] = React.useState("");
@@ -42,7 +42,7 @@ const DashboardTurma = () => {
 
   React.useEffect(() => {
     async function getData() {
-      const { url, options } = GET_ANO_DIRETOR();
+      const { url, options } =  GET_ANO_DIRETOR();
       const { json, response } = await request(url, options);
 
       if (response.ok) {
