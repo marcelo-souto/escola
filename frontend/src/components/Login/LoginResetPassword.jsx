@@ -8,6 +8,7 @@ import { POST_RESET_PASSWORD } from '../../api/api';
 import Error from '../../helpers/Error';
 import Success from '../../helpers/Success';
 import { useNavigate } from 'react-router-dom'
+import Head from '../../helpers/Head'
 
 function LoginResetPassword() {
 	const { loading, data, error, request } = useFetch();
@@ -32,6 +33,7 @@ function LoginResetPassword() {
 
 	return (
 		<div className='comeFromRight'>
+			<Head title='Esqueci minha senha' />
 			<h1 className='titulo'>Esqueceu sua senha?</h1>
 			<Form onSubmit={handleSubmit}>
 				<Input

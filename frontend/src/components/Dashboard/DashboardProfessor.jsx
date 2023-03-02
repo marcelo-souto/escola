@@ -9,6 +9,7 @@ import {
 import ProfessoresLista from './ProfessoresLista';
 import ProfessorForm from './ProfessorForm';
 import Loading from '../../helpers/Loading';
+import Head from '../../helpers/Head'
 
 function DashboardProfessor() {
 	const { loading, data, error, request } = useFetch();
@@ -58,6 +59,7 @@ function DashboardProfessor() {
 	if (loading) return <Loading />;
 	return (
 		<section className={styles.container}>
+			<Head title='Professores' />
 			<h1 className={`${styles.title} comeFromRight`}>Professores</h1>
 			<div className={`${styles.lista} comeFromRight`}>
 				<div>

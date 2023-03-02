@@ -1,7 +1,12 @@
+import Head from '../../helpers/Head';
 
-
-function DashboardTurma () {
-    return <div>Turma</div>
+function DashboardTurma() {
+	return (
+		<div>
+			<Head title='Turmas' />
+			Turma
+		</div>
+	);
 }
 
-export default DashboardTurma
+export default DashboardTurma;
