@@ -74,7 +74,7 @@ const anoController = {
     const {diretorId: id } = req.body;
 
     try {
-      const turma = await Turma.findAll({where:{diretorId:id}})
+      const turma = await Turma.findByPk(id)
         console.log(turma)
       if (!turma) throw new Error("Turma não existe.");
 

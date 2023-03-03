@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080';
+const API_URL = 'https://escola-production.up.railway.app';
 
 // Login
 const POST_TOKEN = (body) => {
