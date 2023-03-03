@@ -139,6 +139,45 @@ const GET_MATERIAS = () => {
 	};
 };
 
+const GET_TURMA_DIRETOR = () => {
+	return {
+		url: API_URL + '/turno/get',
+		options: {
+			method: 'GET',
+			headers: {
+				Authorization: 'Bearer ' + window.localStorage.getItem('token')
+			},
+		}
+	};
+}
+
+const GET_ANO_DIRETOR = () => {
+	return {
+		url: API_URL + '/ano/getall',
+		options: {
+			method: 'GET',
+			headers: {
+				Authorization: 'Bearer ' + window.localStorage.getItem('token')
+			},
+		}
+	};
+}
+
+const POST_CREATE_TURMA = (body) => {
+	console.log(body)
+	return {
+		url: API_URL + '/turma/create',
+		options: {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + window.localStorage.getItem('token')
+			},
+			body: JSON.stringify(body)
+			
+		}
+	};
+};
 export {
 	POST_TOKEN,
 	GET_USER,
@@ -150,5 +189,8 @@ export {
 	GET_MATERIAS,
 	POST_CREATE_PROFESSOR,
 	POST_UPDATE_PROFESSOR,
-	DELETE_DELETE_PROFESSOR
+	DELETE_DELETE_PROFESSOR,
+	GET_TURMA_DIRETOR,
+	GET_ANO_DIRETOR,
+	POST_CREATE_TURMA
 };

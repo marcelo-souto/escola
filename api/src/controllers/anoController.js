@@ -1,4 +1,6 @@
 const Ano = require("../models/Ano.js");
+const Turma = require("../models/Turma.js");
+const Turnos = require("../models/Turnos.js");
 const { Op } = require("sequelize");
 const validate = require("../functions/validate.js");
 const nodemailer = require("nodemailer");
@@ -44,7 +46,7 @@ const anoController = {
 
   getAll: async (req, res) => {
     try {
-      const ano = await Ano.findAll();
+      const ano = await Ano.findAll({include:{model:Turma,include:{model:Turnos}}});
 
       return res.status(200).json(ano);
     } catch (erro) {

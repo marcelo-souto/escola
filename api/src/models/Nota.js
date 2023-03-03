@@ -1,7 +1,7 @@
 const sequelize = require('../database/database.js');
 const Aluno = require('./Aluno.js');
-const Professor = require('./Professor.js');
 const { DataTypes } = require('sequelize');
+const Materia = require('./Materia.js');
 
 const Nota = sequelize.define(
 	'notas',
@@ -20,12 +20,12 @@ const Nota = sequelize.define(
 				key: 'alunoId'
 			}
 		},
-		professorId: {
+		materiaId: {
 			type: DataTypes.INTEGER,
 			allowNull: true,
 			references: {
-				model: Professor,
-				key: 'professorId'
+				model: Materia,
+				key: 'materiaId'
 			}
 		},
 		b1: {
@@ -45,5 +45,13 @@ const Nota = sequelize.define(
 			allowNull: true
 		}
 	},
+
 	{ timestamps: false }
 );
+
+// Turma.sync({force:true})
+
+Nota.belongsTo(Aluno, { foreignKey: "alunoId" });
+Nota.hasMany(Aluno, { foreignKey: "alunoId" })
+Aluno.hasMany(Nota, { foreignKey: "alunoId" })
+

@@ -7,13 +7,13 @@ import useFetch from '../../hooks/useFetch';
 import { POST_RESET_PASSWORD } from '../../api/api';
 import Error from '../../helpers/Error';
 import Success from '../../helpers/Success';
-import { useNavigate } from 'react-router-dom'
-import Head from '../../helpers/Head'
+import { useNavigate } from 'react-router-dom';
+import Head from '../../helpers/Head';
 
 function LoginResetPassword() {
 	const { loading, data, error, request } = useFetch();
 
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	const email = useForm('email');
 
@@ -28,7 +28,6 @@ function LoginResetPassword() {
 		if (email.validate()) {
 			await getData();
 		}
-
 	};
 
 	return (
@@ -44,7 +43,16 @@ function LoginResetPassword() {
 				/>
 				{error && <Error>{error}</Error>}
 				{data && <Success>{data.message}</Success>}
-				{data ? <Button variant='secondary' onClick={() => navigate('/login')}>Voltar</Button> : <Button loading={loading}>Enviar</Button>}
+				{data ? (
+					<Button
+						variant='secondary'
+						onClick={() => navigate('/login')}
+					>
+						Voltar
+					</Button>
+				) : (
+					<Button loading={loading}>Enviar</Button>
+				)}
 			</Form>
 		</div>
 	);

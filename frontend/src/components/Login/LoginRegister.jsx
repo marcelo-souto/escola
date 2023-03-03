@@ -9,7 +9,7 @@ import useFetch from '../../hooks/useFetch';
 import { useNavigate } from 'react-router-dom';
 import Error from '../../helpers/Error';
 import InputMask from 'react-input-mask';
-import Head from '../../helpers/Head'
+import Head from '../../helpers/Head';
 
 // nome, cpf, dataNascimento, telefone, email, senha
 

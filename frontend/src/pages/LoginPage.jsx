@@ -12,9 +12,9 @@ import { UserContext } from '../context/UserContext';
 import PageNotFound from './PageNotFound';
 
 function LoginPage() {
-	const { loggedIn } = React.useContext(UserContext)
+	const { loggedIn } = React.useContext(UserContext);
 
-	if (loggedIn) return <Navigate to='/dashboard' />
+	if (loggedIn) return <Navigate to='/dashboard' />;
 	return (
 		<div className={styles.container}>
 			<div>
@@ -38,9 +38,9 @@ function LoginPage() {
 						element={<LoginResetPassword />}
 					/>
 					<Route
-					path='*'
-					element={<PageNotFound />}
-				/>
+						path='*'
+						element={<PageNotFound />}
+					/>
 				</Routes>
 			</div>
 		</div>
