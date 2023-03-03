@@ -1,4 +1,5 @@
 const Diretor = require('../models/Diretor.js');
+const Professor = require('../models/Professor.js');
 const Token = require('../models/Token.js');
 const emailConfirmationTemplate = require('../functions/templateUserConfirmationEmail.js');
 const emailRecoverPasswordTemplate = require('../functions/templateUserRecoverPassword.js');
@@ -7,7 +8,7 @@ const { Op } = require('sequelize');
 const validate = require('../functions/validate.js');
 const nodemailer = require('nodemailer');
 const { hash, compare } = require('bcrypt');
-const { sign, verify } = require('jsonwebtoken');
+const  { sign, verify } = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -25,62 +26,73 @@ const transporter = nodemailer.createTransport({
 	}
 });
 
-const diretorController = {
+const professorController = {
 	create: async (req, res) => {
-		const { nome, cpf, dataNascimento, telefone, email, senha } = req.body;
+		const {
+			nome,
+			cpf,
+			dataNascimento,
+			telefone,
+			email,
+			senha,
+			materiaId,
+			diretorId
+		} = req.body;
 
 		try {
 			validate({ nome, isRequired: true });
 			validate({ cpf, type: 'cpf', isRequired: true });
-			validate({ 'data de nascimento': dataNascimento, type: 'data', isRequired: true });
+			validate({
+				'data de nascimento': dataNascimento,
+				type: 'data',
+				isRequired: true
+			});
 			validate({ telefone, type: 'telefone', isRequired: true });
 			validate({ email, type: 'email', isRequired: true });
 			validate({ senha, type: 'senha', isRequired: true });
-			
+      validate({'materia': materiaId, type: 'numero', isRequired: true})
 
-			const diretorJaExiste = await Diretor.findOne({
+
+			const diretor = await Diretor.findByPk(diretorId);
+      if (!diretor) return res.status(404).json({erro: 'Diretor não encontrado.'})
+
+			const infoJaCadastrada = await Professor.findOne({
 				where: {
-					email: email
+					[Op.or]: [
+						{ email: `${email}` },
+						{ cpf: `${cpf}` },
+						{ telefone: `${telefone}` }
+					]
 				}
 			});
 
-			if (diretorJaExiste) throw new Error('Email já cadastrado.');
-
-			const diretorJaExisteCpf = await Diretor.findOne({
-				where: {
-					cpf: cpf
-				}
-			});
-
-			if (diretorJaExisteCpf) throw new Error('Cpf já cadastrado.');
-
-			const diretorJaExisteTel = await Diretor.findOne({
-				where: {
-					telefone: telefone
-				}
-			});
-
-			if (diretorJaExisteTel) throw new Error('Telefone já cadastrado.');
+			if (infoJaCadastrada) {
+				if (infoJaCadastrada.email === email) throw Error('Email já está sendo utilizado.');
+				if (infoJaCadastrada.cpf === cpf) throw Error('CPF já cadastrado.');
+				if (infoJaCadastrada.telefone === telefone) throw Error('Telefone já cadastrado.');
+			}
 
 			const senhaCriptografada = await hash(senha, 10);
 
-			const diretor = await Diretor.create({
+			const professor = await Professor.create({
 				nome: nome,
 				cpf: cpf,
 				dataNascimento: dataNascimento,
 				telefone: telefone,
 				email: email,
 				emailVerificado: false,
-				senha: senhaCriptografada
+				senha: senhaCriptografada,
+        materiaId: materiaId,
+        diretorId: diretorId
 			});
 
-			const id = `${diretor.diretorId}@D`;
+			const id = `${professor.professorId}@P`;
 
 			const emailToken = sign({ userId: id }, process.env.PRIVATE_KEY, {
 				expiresIn: '1d'
 			});
 
-			const emailTokenDiretor = await Token.create({
+			const emailTokenProfessor = await Token.create({
 				userId: id,
 				token: emailToken
 			});
@@ -89,17 +101,18 @@ const diretorController = {
 				text: 'Autenticação',
 				subject: 'Confirme seu email',
 				from: `Cinema <nodecinemapc2@gmail.com>`,
-				to: `${diretor.email}`,
+				to: `${professor.email}`,
 				html: emailConfirmationTemplate(
-					'diretor',
-					diretor.nome,
-					emailTokenDiretor.token
+					'professor',
+					professor.nome,
+					emailTokenProfessor.token
 				)
 			});
 
 			return res
 				.status(200)
-				.json({ mensagem: `Diretor ${diretor.nome} criado com sucesso.` });
+				.json({ mensagem: `Professor ${professor.nome} criado com sucesso.` });
+
 		} catch (erro) {
 			return res.json({ erro: erro.message });
 		}
@@ -117,26 +130,26 @@ const diretorController = {
 				if (!resultado) throw new Error();
 				const id = resultado.userId.split('@');
 
-				if (id[1] === 'D') userId = id[0];
+				if (id[1] === 'P') userId = id[0];
 				else throw new Error();
 			} catch (error) {
 				return res.status(400).json({ erro: 'Token Inválido.' });
 			}
 
-			const diretor = await Diretor.findByPk(userId);
-			if (!diretor)
+			const professor = await Professor.findByPk(userId);
+			if (!professor)
 				return res.status(404).json({ erro: 'Usuário não encontrado.' });
 
 			const tokenValid = await Token.findOne({
 				where: {
-					[Op.and]: [{ userId: `${userId}@D` }, { token: token }]
+					[Op.and]: [{ userId: `${userId}@P` }, { token: token }]
 				}
 			});
 
 			if (tokenValid) await tokenValid.destroy();
 
-			if (!diretor.emailVerificado) {
-				await diretor.update({ emailVerificado: true });
+			if (!professor.emailVerificado) {
+				await professor.update({ emailVerificado: true });
 				return res
 					.status(200)
 					.json({ mensagem: 'Email verificado com sucesso.' });
@@ -154,24 +167,24 @@ const diretorController = {
 		try {
 			if (!email || !senha) throw new Error('Email e senha são obrigatórios.');
 
-			const diretor = await Diretor.findOne({
+			const professor = await Professor.findOne({
 				where: {
 					email: email
 				}
 			});
 
-			if (!diretor)
+			if (!professor)
 				return res.status(404).json({ erro: 'Usuário não encontrado.' });
 
-			if (diretor.emailVerificado != true)
+			if (professor.emailVerificado != true)
 				return res.status(404).json({ erro: 'Usuário não verificado.' });
 
-			const resultado = await compare(senha, diretor.senha);
+			const resultado = await compare(senha, professor.senha);
 
 			if (!resultado) throw new Error('Usuário ou senha inválida.');
 
 			const token = sign(
-				{ diretorId: diretor.diretorId },
+				{ professorId: professor.professorId },
 				process.env.PRIVATE_KEY,
 				{ expiresIn: '1d' }
 			);
@@ -185,19 +198,19 @@ const diretorController = {
 	},
 
 	getInfo: async (req, res) => {
-		const { diretorId: id } = req.body;
+		const { professorId: id } = req.body;
 
 		try {
-			const diretor = await Diretor.findByPk(id, {
+			const professor = await Professor.findByPk(id, {
 				attributes: {
 					exclude: ['senha', 'emailVerificado']
 				}
 			});
 
-			if (!diretor)
+			if (!professor)
 				return res.status(404).json({ erro: 'Usuário não encontrado.' });
 
-			return res.status(200).json(diretor);
+			return res.status(200).json(professor);
 		} catch (erro) {
 			return res.status(400).json({ erro: erro.message });
 		}
@@ -205,7 +218,7 @@ const diretorController = {
 
 	update: async (req, res) => {
 		const {
-			diretorId: id,
+			professorId: id,
 			email,
 			nome,
 			telefone,
@@ -219,12 +232,12 @@ const diretorController = {
 			});
 
 		try {
-			const diretor = await Diretor.findByPk(id);
+			const professor = await Professor.findByPk(id);
 
-			if (!diretor)
+			if (!professor)
 				return res.status(404).json({ erro: 'Usuário não encontrado.' });
 
-			if (diretor.email === email)
+			if (professor.email === email)
 				return res.status(400).json({
 					erro: 'A informação a ser atualizada deve ser diferente da atual.'
 				});
@@ -235,7 +248,7 @@ const diretorController = {
 			validate({ cpf, type: 'cpf' });
 			validate({ 'data de nascimento': dataNascimento, type: 'data' });
 
-			const infoJaCadastrada = await Diretor.findOne({
+			const infoJaCadastrada = await Professor.findOne({
 				where: {
 					[Op.or]: [
 						{ email: `${email}` },
@@ -253,35 +266,36 @@ const diretorController = {
 					throw Error('Telefone já cadastrado.');
 			}
 
-			await diretor.update({
-				nome: nome ? nome : diretor.nome,
-				email: email ? email : diretor.email,
-				telefone: telefone ? telefone : diretor.telefone,
-				cpf: cpf ? cpf : diretor.cpf,
-				dataNascimento: dataNascimento ? dataNascimento : diretor.dataNascimento
+			await professor.update({
+				nome: nome ? nome : professor.nome,
+				email: email ? email : professor.email,
+				telefone: telefone ? telefone : professor.telefone,
+				cpf: cpf ? cpf : professor.cpf,
+				dataNascimento: dataNascimento ? dataNascimento : professor.dataNascimento
 			});
 
 			return res
 				.status(201)
 				.json({ mensagem: `Informações atualizadas com sucesso.` });
+
 		} catch (erro) {
 			return res.status(400).json({ erro: erro.message });
 		}
 	},
 
 	delete: async (req, res) => {
-		const { diretorId: id } = req.body;
+		const { professorId: id } = req.body;
 
 		try {
-			const diretor = await Diretor.findByPk(id);
+			const professor = await Professor.findByPk(id);
 
-			if (!diretor)
+			if (!professor)
 				return res.status(404).json({ erro: 'Usuário não encontrado.' });
 
-			const diretorDeletado = await diretor.destroy();
+			const professorDeletado = await professor.destroy();
 
 			return res.status(200).json({
-				mensagem: `Cadastro do usuário ${diretorDeletado.nome} excluido com sucesso.`
+				mensagem: `Cadastro do usuário ${professorDeletado.nome} excluido com sucesso.`
 			});
 		} catch (erro) {
 			return res.status(400).json({ erro: erro.message });
@@ -294,48 +308,48 @@ const diretorController = {
 		try {
 			validate({ email, type: 'email', isRequired: true });
 
-			const diretor = await Diretor.findOne({
+			const professor = await Professor.findOne({
 				where: {
 					email: `${email}`
 				}
 			});
 
-			if (!diretor)
+			if (!professor)
 				return res.status(404).json({ erro: 'Email não foi encontrado.' });
 
 			const senha = randomPasswordGenerate();
 			const senhaCriptografada = await hash(senha, 10);
 
-			await diretor.update({ senha: senhaCriptografada });
+			await professor.update({ senha: senhaCriptografada });
 
 			await transporter.sendMail({
 				text: 'Recuperação de Senha',
 				subject: 'Recupere sua Senha',
 				from: `Cinema <nodecinemapc2@gmail.com>`,
-				to: `${diretor.email}`,
+				to: `${professor.email}`,
 				html: emailRecoverPasswordTemplate(senha)
 			});
 
 			return res
 				.status(200)
-				.json({ message: 'Email de recuperação de senha enviado com sucesso.' });
+				.json({ message: 'Email de recuperação se senha enviado.' });
 		} catch (erro) {
 			return res.status(400).json({ erro: erro.message });
 		}
 	},
 
 	changePassword: async (req, res) => {
-		const { diretorId, senha, novaSenha, confirmacaoNovaSenha } = req.body;
+		const { professorId, senha, novaSenha, confirmacaoNovaSenha } = req.body;
 
 		try {
 			validate({ senha, type: 'senha', isRequired: true });
 			validate({ 'senha nova': novaSenha, type: 'senha', isRequired: true });
 
-			const diretor = await Diretor.findByPk(diretorId);
-			if (!diretor)
+			const professor = await Professor.findByPk(professorId);
+			if (!professor)
 				return res.status(404).json({ erro: 'Usuário não encontrado.' });
 
-			const resultado = await compare(senha, diretor.senha);
+			const resultado = await compare(senha, professor.senha);
 			if (!resultado) return res.status(400).json({ erro: 'Senha incorreta.' });
 
 			if (novaSenha !== confirmacaoNovaSenha)
@@ -348,12 +362,12 @@ const diretorController = {
 
 			const novaSenhaCriptografada = await hash(novaSenha, 10);
 
-			await diretor.update({
+			await professor.update({
 				senha: novaSenhaCriptografada
 			});
 
 			const token = sign(
-				{ diretorId: diretor.diretorId },
+				{ professorId: professor.professorId },
 				process.env.PRIVATE_KEY,
 				{ expiresIn: '1d' }
 			);
@@ -373,34 +387,34 @@ const diretorController = {
 			if (!email)
 				return res.status(400).json({ erro: 'Campo email é obrigatório.' });
 
-			const diretor = await Diretor.findOne({
+			const professor = await Professor.findOne({
 				where: {
 					email: `${email}`
 				}
 			});
 
-			if (!diretor)
+			if (!professor)
 				return res.status(404).json({ erro: 'Email não encontrado.' });
 
-			if (diretor.emailVerificado)
+			if (professor.emailVerificado)
 				return res.status(400).json({ erro: 'Email já verificado.' });
 
 			const tokenEmail = await Token.findOne({
 				where: {
-					usuarioId: `${diretor.diretorId}@D`
+					usuarioId: `${professor.professorId}@P`
 				}
 			});
 
 			if (tokenEmail) await tokenEmail.destroy();
 
 			const token = sign(
-				{ usuarioId: `${diretor.diretorId}@D` },
+				{ usuarioId: `${professor.professorId}@P` },
 				process.env.PRIVATE_KEY,
 				{ expiresIn: '1d' }
 			);
 
 			const emailNovoToken = await Token.create({
-				usuarioId: `${diretor.diretorId}@D`,
+				usuarioId: `${professor.professorId}@P`,
 				token: token
 			});
 
@@ -408,10 +422,10 @@ const diretorController = {
 				text: 'Autenticação',
 				subject: 'Confirme seu email',
 				from: `Cinema <nodecinemapc2@gmail.com>`,
-				to: `${diretor.email}`,
+				to: `${professor.email}`,
 				html: emailConfirmationTemplate(
-					'diretor',
-					diretor.nome,
+					'professor',
+					professor.nome,
 					emailNovoToken.token
 				)
 			});
@@ -425,4 +439,4 @@ const diretorController = {
 	}
 };
 
-module.exports = diretorController;
+module.exports = professorController;

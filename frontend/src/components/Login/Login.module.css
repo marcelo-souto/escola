@@ -1,0 +1,32 @@
+.esquecisenha {
+  position: absolute;
+  right: 0;
+  top: 4px;
+  display: block;
+  font-size: 0.85rem;
+}
+
+.esquecisenhaContainer {
+  position: relative;
+}
+
+.cadastro {
+  margin-top: 48px;
+}
+
+.cadastro > p {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.reenviar {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.reenviar > span {
+  color: #0167ff;
+  display: block;
+  text-decoration: underline;
+}

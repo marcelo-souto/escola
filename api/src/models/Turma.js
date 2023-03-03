@@ -7,7 +7,7 @@ const Diretor = require('./Diretor')
 const Turma = sequelize.define(
   "turmas",
   {
-    id: {
+    turmaId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -54,7 +54,7 @@ const Turma = sequelize.define(
   }
 );
 
-Turma.sync({force:true})
+// Turma.sync({force:true})
 
 Turma.belongsTo(Diretor, { foreignKey: "diretorId" });
 Diretor.hasMany(Turma, { foreignKey: "diretorId" });

@@ -1,0 +1,10 @@
+.radioinput{
+    display: flex;
+    gap:20px
+}
+
+.label {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: #141414;
+  }
