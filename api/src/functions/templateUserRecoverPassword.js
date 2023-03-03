@@ -64,7 +64,7 @@ const templateUserConfirmationEmail = (senha) => {
 			border-radius: 6px;
 			margin: 0 auto;
 		"
-		href="${url}"
+		href="https://escola-ehnm6ye42-marcelo-souto.vercel.app/login"
 		>Ir para o site</a
 	>
 	</div>
