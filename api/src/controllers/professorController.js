@@ -1,6 +1,7 @@
 const Diretor = require('../models/Diretor.js');
 const Professor = require('../models/Professor.js');
 const Token = require('../models/Token.js');
+const Materia = require('../models/Materia.js');
 const emailConfirmationTemplate = require('../functions/templateUserConfirmationEmail.js');
 const emailRecoverPasswordTemplate = require('../functions/templateUserRecoverPassword.js');
 const randomPasswordGenerate = require('../functions/ramdomPasswordGenerate.js');
@@ -8,7 +9,7 @@ const { Op } = require('sequelize');
 const validate = require('../functions/validate.js');
 const nodemailer = require('nodemailer');
 const { hash, compare } = require('bcrypt');
-const  { sign, verify } = require('jsonwebtoken');
+const { sign, verify } = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -34,9 +35,9 @@ const professorController = {
 			dataNascimento,
 			telefone,
 			email,
-			senha,
 			materiaId,
-			diretorId
+			diretorId,
+			senha
 		} = req.body;
 
 		try {
@@ -49,12 +50,17 @@ const professorController = {
 			});
 			validate({ telefone, type: 'telefone', isRequired: true });
 			validate({ email, type: 'email', isRequired: true });
-			validate({ senha, type: 'senha', isRequired: true });
-      validate({'materia': materiaId, type: 'numero', isRequired: true})
-
+			validate({ senha, type: 'senha' });
+			validate({ materia: materiaId, type: 'numero', isRequired: true });
 
 			const diretor = await Diretor.findByPk(diretorId);
-      if (!diretor) return res.status(404).json({erro: 'Diretor não encontrado.'})
+			if (!diretor)
+				return res.status(404).json({ erro: 'Diretor não encontrado.' });
+
+			const materia = await Materia.findByPk(materiaId);
+
+			if (!materia)
+				return res.status(404).json({ erro: 'Materia não encontrada.' });
 
 			const infoJaCadastrada = await Professor.findOne({
 				where: {
@@ -67,12 +73,14 @@ const professorController = {
 			});
 
 			if (infoJaCadastrada) {
-				if (infoJaCadastrada.email === email) throw Error('Email já está sendo utilizado.');
+				if (infoJaCadastrada.email === email)
+					throw Error('Email já está sendo utilizado.');
 				if (infoJaCadastrada.cpf === cpf) throw Error('CPF já cadastrado.');
-				if (infoJaCadastrada.telefone === telefone) throw Error('Telefone já cadastrado.');
+				if (infoJaCadastrada.telefone === telefone)
+					throw Error('Telefone já cadastrado.');
 			}
 
-			const senhaCriptografada = await hash(senha, 10);
+			const senhaCriptografada = await hash('12345678Ma', 10);
 
 			const professor = await Professor.create({
 				nome: nome,
@@ -82,8 +90,8 @@ const professorController = {
 				email: email,
 				emailVerificado: false,
 				senha: senhaCriptografada,
-        materiaId: materiaId,
-        diretorId: diretorId
+				materiaId: materiaId,
+				diretorId: diretorId
 			});
 
 			const id = `${professor.professorId}@P`;
@@ -112,7 +120,6 @@ const professorController = {
 			return res
 				.status(200)
 				.json({ mensagem: `Professor ${professor.nome} criado com sucesso.` });
-
 		} catch (erro) {
 			return res.json({ erro: erro.message });
 		}
@@ -218,26 +225,55 @@ const professorController = {
 
 	update: async (req, res) => {
 		const {
+			diretorId,
 			professorId: id,
 			email,
 			nome,
 			telefone,
 			cpf,
-			dataNascimento
+			dataNascimento,
+			materiaId
 		} = req.body;
 
-		if (!email && !nome)
-			return res.status(400).json({
-				erro: 'Não foram enviadas informações para serem atualizadas.'
-			});
-
 		try {
+			if (
+				!email &&
+				!nome &&
+				!telefone &&
+				!cpf &&
+				!dataNascimento &&
+				!materiaId
+			) {
+				throw Error('É obrigatório o envio de alguma informação.');
+			}
+
+			const diretor = await Diretor.findByPk(diretorId);
+			if (!diretor)
+				return res.status(404).json({ erro: 'Diretor não encontrado' });
+
 			const professor = await Professor.findByPk(id);
 
 			if (!professor)
 				return res.status(404).json({ erro: 'Usuário não encontrado.' });
 
-			if (professor.email === email)
+			if (professor.diretorId !== diretor.diretorId)
+				return res.status(401).json({ erro: 'Voce não tem permissão.' });
+
+			let materia;
+			if (materiaId) {
+				materia = await Materia.findByPk(materiaId);
+				if (!materia)
+					return res.status(404).json({ erro: 'Materia não encontrada.' });
+			}
+
+			if (
+				professor.email === email ||
+				professor.nome === nome ||
+				professor.telefone === telefone ||
+				professor.cpf === cpf ||
+				professor.dataNascimento === dataNascimento ||
+				professor.materiaId === materiaId
+			)
 				return res.status(400).json({
 					erro: 'A informação a ser atualizada deve ser diferente da atual.'
 				});
@@ -271,26 +307,36 @@ const professorController = {
 				email: email ? email : professor.email,
 				telefone: telefone ? telefone : professor.telefone,
 				cpf: cpf ? cpf : professor.cpf,
-				dataNascimento: dataNascimento ? dataNascimento : professor.dataNascimento
+				dataNascimento: dataNascimento
+					? dataNascimento
+					: professor.dataNascimento,
+				materiaId: materiaId ? materiaId : professor.materiaId
 			});
 
 			return res
 				.status(201)
 				.json({ mensagem: `Informações atualizadas com sucesso.` });
-
 		} catch (erro) {
 			return res.status(400).json({ erro: erro.message });
 		}
 	},
 
 	delete: async (req, res) => {
-		const { professorId: id } = req.body;
+		const { diretorId } = req.body;
+		const { professorId: id } = req.params;
 
 		try {
+			const diretor = await Diretor.findByPk(diretorId);
+			if (!diretor)
+				return res.status(401).json({ erro: 'Voce não tem permissão' });
+
 			const professor = await Professor.findByPk(id);
 
 			if (!professor)
 				return res.status(404).json({ erro: 'Usuário não encontrado.' });
+
+			if (diretor.diretorId !== professor.diretorId)
+				return res.status(401).json({ erro: 'Voce não tem permisão.' });
 
 			const professorDeletado = await professor.destroy();
 

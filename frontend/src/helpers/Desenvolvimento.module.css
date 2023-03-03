@@ -1,0 +1,25 @@
+.container {
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.mensagem {
+  margin: 0 auto;
+  font-size: 2rem;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  color: #6d6d6d;
+}
+
+.mensagem::before {
+  width: 180px;
+  height: 180px;
+  content: '';
+  display: block;
+  background: url('../img/desenvolvimento.svg') no-repeat center center;
+  background-size: contain;
+}

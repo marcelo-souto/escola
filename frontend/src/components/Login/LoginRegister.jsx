@@ -9,6 +9,7 @@ import useFetch from '../../hooks/useFetch';
 import { useNavigate } from 'react-router-dom';
 import Error from '../../helpers/Error';
 import InputMask from 'react-input-mask';
+import Head from '../../helpers/Head';
 
 // nome, cpf, dataNascimento, telefone, email, senha
 
@@ -52,6 +53,7 @@ function LoginRegister() {
 
 	return (
 		<div className='comeFromRight'>
+			<Head title='Cadastre-se' />
 			<h1 className='titulo'>Cadastre-se</h1>
 			<Form onSubmit={handleSubmit}>
 				<Input

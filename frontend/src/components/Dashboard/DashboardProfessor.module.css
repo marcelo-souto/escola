@@ -2,7 +2,7 @@
 	padding: 64px;
 }
 
-.title {
+.title, .title2 {
 	font-weight: 700;
 }
 
@@ -15,7 +15,17 @@
 	background-size: contain;
 }
 
-.lista {
+.title2::before {
+	content: '';
+	width: 52px;
+	height: 52px;
+	display: block;
+	background: url('../../img/visao.svg') no-repeat center center;
+	margin-bottom: 8px;
+	background-size: contain;
+}
+
+.lista, .visaoGeral {
 	background-color: #eff2f5;
 	padding: 32px;
 	border-radius: 12px;
@@ -26,5 +36,27 @@
 .lista > div:nth-child(1) {
 	justify-self: end;
 	width: max-content;
+}
 
+.visaoGeral {
+	grid-template-columns: 1fr;
+	gap: 24px;
+}
+
+.visaoGeral > div {
+	background: #fefefe;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 28px;
+	border-radius: 12px;
+}
+
+.visaoGeral p {
+	font-weight: 600;
+	font-size: 1.5rem;
+	color: #5e5e5e;
+	display: flex;
+	gap: 16px;
+	align-items: center;
 }

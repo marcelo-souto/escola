@@ -60,9 +60,8 @@
 	border-radius: 12px;
 	transform: translateY(-16px);
 	opacity: 0;
-	animation: showMenu .3s ease-in-out forwards ;
+	animation: showMenu 0.3s ease-in-out forwards;
 }
-
 
 @keyframes showMenu {
 	to {

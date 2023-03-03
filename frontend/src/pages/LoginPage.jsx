@@ -9,10 +9,12 @@ import styles from './LoginPage.module.css';
 import EstudanteImagem from '../img/estudante2.jpg';
 import { UserContext } from '../context/UserContext';
 
-function LoginPage() {
-	const { loggedIn } = React.useContext(UserContext)
+import PageNotFound from './PageNotFound';
 
-	if (loggedIn) return <Navigate to='/dashboard' />
+function LoginPage() {
+	const { loggedIn } = React.useContext(UserContext);
+
+	if (loggedIn) return <Navigate to='/dashboard' />;
 	return (
 		<div className={styles.container}>
 			<div>
@@ -34,6 +36,10 @@ function LoginPage() {
 					<Route
 						path='/resetpassword'
 						element={<LoginResetPassword />}
+					/>
+					<Route
+						path='*'
+						element={<PageNotFound />}
 					/>
 				</Routes>
 			</div>

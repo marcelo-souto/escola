@@ -3,12 +3,16 @@ const Token = require('../models/Token.js');
 const emailConfirmationTemplate = require('../functions/templateUserConfirmationEmail.js');
 const emailRecoverPasswordTemplate = require('../functions/templateUserRecoverPassword.js');
 const randomPasswordGenerate = require('../functions/ramdomPasswordGenerate.js');
-const { Op } = require('sequelize');
+const { Op, Model } = require('sequelize');
 const validate = require('../functions/validate.js');
 const nodemailer = require('nodemailer');
 const { hash, compare } = require('bcrypt');
 const { sign, verify } = require('jsonwebtoken');
 const dotenv = require('dotenv');
+
+const Turma = require('../models/Turma.js');
+const Professor = require('../models/Professor.js');
+const Materia = require('../models/Materia.js');
 
 dotenv.config();
 
@@ -32,11 +36,14 @@ const diretorController = {
 		try {
 			validate({ nome, isRequired: true });
 			validate({ cpf, type: 'cpf', isRequired: true });
-			validate({ 'data de nascimento': dataNascimento, type: 'data', isRequired: true });
+			validate({
+				'data de nascimento': dataNascimento,
+				type: 'data',
+				isRequired: true
+			});
 			validate({ telefone, type: 'telefone', isRequired: true });
 			validate({ email, type: 'email', isRequired: true });
 			validate({ senha, type: 'senha', isRequired: true });
-			
 
 			const diretorJaExiste = await Diretor.findOne({
 				where: {
@@ -88,7 +95,7 @@ const diretorController = {
 			await transporter.sendMail({
 				text: 'Autenticação',
 				subject: 'Confirme seu email',
-				from: `Cinema <nodecinemapc2@gmail.com>`,
+				from: `Elite <nodecinemapc2@gmail.com>`,
 				to: `${diretor.email}`,
 				html: emailConfirmationTemplate(
 					'diretor',
@@ -164,7 +171,7 @@ const diretorController = {
 				return res.status(404).json({ erro: 'Usuário não encontrado.' });
 
 			if (diretor.emailVerificado != true)
-				return res.status(404).json({ erro: 'Usuário não verificado.' });
+				return res.status(401).json({ erro: 'Usuário não verificado.' });
 
 			const resultado = await compare(senha, diretor.senha);
 
@@ -189,6 +196,26 @@ const diretorController = {
 
 		try {
 			const diretor = await Diretor.findByPk(id, {
+				include: [
+					{
+						model: Professor,
+						as: 'professores',
+						attributes: {
+							exclude: 'senha'
+						},
+						include: [
+							{
+								model: Materia
+							},
+							{
+								model: Turma
+							}
+						]
+					},
+					{
+						model: Turma
+					}
+				],
 				attributes: {
 					exclude: ['senha', 'emailVerificado']
 				}
@@ -311,14 +338,14 @@ const diretorController = {
 			await transporter.sendMail({
 				text: 'Recuperação de Senha',
 				subject: 'Recupere sua Senha',
-				from: `Cinema <nodecinemapc2@gmail.com>`,
+				from: `Elite <nodecinemapc2@gmail.com>`,
 				to: `${diretor.email}`,
 				html: emailRecoverPasswordTemplate(senha)
 			});
 
-			return res
-				.status(200)
-				.json({ message: 'Email de recuperação de senha enviado com sucesso.' });
+			return res.status(200).json({
+				message: 'Email de recuperação de senha enviado com sucesso.'
+			});
 		} catch (erro) {
 			return res.status(400).json({ erro: erro.message });
 		}
@@ -387,27 +414,27 @@ const diretorController = {
 
 			const tokenEmail = await Token.findOne({
 				where: {
-					usuarioId: `${diretor.diretorId}@D`
+					userId: `${diretor.diretorId}@D`
 				}
 			});
 
 			if (tokenEmail) await tokenEmail.destroy();
 
 			const token = sign(
-				{ usuarioId: `${diretor.diretorId}@D` },
+				{ userId: `${diretor.diretorId}@D` },
 				process.env.PRIVATE_KEY,
 				{ expiresIn: '1d' }
 			);
 
 			const emailNovoToken = await Token.create({
-				usuarioId: `${diretor.diretorId}@D`,
+				userId: `${diretor.diretorId}@D`,
 				token: token
 			});
 
 			await transporter.sendMail({
 				text: 'Autenticação',
 				subject: 'Confirme seu email',
-				from: `Cinema <nodecinemapc2@gmail.com>`,
+				from: `Elite <nodecinemapc2@gmail.com>`,
 				to: `${diretor.email}`,
 				html: emailConfirmationTemplate(
 					'diretor',

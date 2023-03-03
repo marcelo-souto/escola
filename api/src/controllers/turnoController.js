@@ -1,8 +1,8 @@
 const Turno = require('../models/Turnos.js');
 
 const turnoController = {
-	create: async (req, res) => {
-		const { periodo, diretorId: id } = req.body;
+  create: async (req, res) => {
+    const { periodo, diretorId: id } = req.body;
 
 		try {
 			const turnoFind = await Turno.findOne({ where: { periodo: periodo } });

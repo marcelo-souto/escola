@@ -14,6 +14,6 @@ const TurmaProfessor = sequelize.define(
 	{ tableName: 'turmaProfessores', timestamps: false }
 );
 
-// TurmaProfessor.sync({forcer:true})
+// TurmaProfessor.sync()
 
 module.exports = TurmaProfessor;

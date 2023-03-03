@@ -14,17 +14,17 @@ const templateUserConfirmationEmail = (rotaUsuario, usuario, token) => {
 	<h3
 		style="
 			font-size: 1.8rem;
-			background-color: #171717;
-			color: #f1f1f1;
+			background: linear-gradient(230.17deg, #0167FF 13.99%, #287EFF 84.35%);
+			color: #FFFFFF;
 			border-radius: 16px 16px 0px 0px;
 			padding: 32px;
-			font-weight: 500;
+			font-weight: 600;
 			margin: 0;
 		"
 	>
 		Seja bem vindo ${usuario}
 	</h3>
-	<div style="padding: 42px; background: #F5F5F5; border-radius: 0px 0px 16px 16px;">
+	<div style="padding: 42px; background: #eff2f5; border-radius: 0px 0px 16px 16px;">
 	<p
 		style="
 			font-size: 1.5rem;
@@ -53,9 +53,9 @@ const templateUserConfirmationEmail = (rotaUsuario, usuario, token) => {
 		style="
 			display: block;
 			padding: 16px 32px;
-			background-color: #ffd900;
+			background: linear-gradient(230.17deg, #0167FF 13.99%, #287EFF 84.35%);
 			text-decoration: none;
-			color: #323232;
+			color: #FFFFFF;
 			font-size: 1rem;
 			font-weight: 600;
 			width: max-content;

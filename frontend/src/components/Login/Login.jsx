@@ -9,19 +9,20 @@ import Error from '../../helpers/Error';
 import { Link } from 'react-router-dom';
 import { POST_RESEND_EMAIL } from '../../api/api';
 import useFetch from '../../hooks/useFetch';
-import Success from '../../helpers/Success'
+import Success from '../../helpers/Success';
+import Head from '../../helpers/Head';
 
 function Login() {
 	const { userLogin, loading, error } = React.useContext(UserContext);
-	const { request, data } = useFetch()
+	const { request, data } = useFetch();
 
 	const email = useForm('email');
 	const senha = useForm('senha');
 
 	const handleClick = async () => {
 		const { url, options } = POST_RESEND_EMAIL({ email: email.value });
-		const {response, json} = await request(url, options);
-		console.log(response)
+		const { response, json } = await request(url, options);
+		console.log(response);
 	};
 
 	const handleSubmit = async (e) => {
@@ -34,6 +35,7 @@ function Login() {
 
 	return (
 		<div className={`${styles.container} comeFromRight`}>
+			<Head title='Login' />
 			<h1 className='titulo'>Login</h1>
 			<Form onSubmit={handleSubmit}>
 				<Input
@@ -56,7 +58,7 @@ function Login() {
 					/>
 				</div>
 				{error && <Error>{error}</Error>}
-				{error === 'Usuário não verificado.' && !data &&(
+				{error === 'Usuário não verificado.' && !data && (
 					<p className={styles.reenviar}>
 						Não recebeu email de verificação?
 						<span

@@ -68,6 +68,7 @@ Professor.belongsTo(Diretor, { foreignKey: 'diretorId' });
 
 Materia.hasMany(Professor, { foreignKey: 'materiaId' });
 Professor.hasOne(Materia, { foreignKey: 'materiaId' });
+Professor.belongsTo(Materia, {foreignKey: 'materiaId'})
 
 Professor.belongsToMany(Turma, {
 	through: {

@@ -55,5 +55,3 @@ Nota.belongsTo(Aluno, { foreignKey: "alunoId" });
 Nota.hasMany(Aluno, { foreignKey: "alunoId" })
 Aluno.hasMany(Nota, { foreignKey: "alunoId" })
 
-
-module.exports = Turma;
