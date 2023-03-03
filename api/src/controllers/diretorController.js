@@ -108,7 +108,7 @@ const diretorController = {
 				.status(200)
 				.json({ mensagem: `Diretor ${diretor.nome} criado com sucesso.` });
 		} catch (erro) {
-			return res.json({ erro: erro.message });
+			return res.status(400).json({ erro: erro.message });
 		}
 	},
 
