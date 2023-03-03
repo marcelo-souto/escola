@@ -144,11 +144,15 @@ const diretorController = {
 
 			if (!diretor.emailVerificado) {
 				await diretor.update({ emailVerificado: true });
-				return res
-					.status(200)
-					.json({ mensagem: 'Email verificado com sucesso.' });
+				return res.send(
+					'<div style="height: 98vh; width: 98vw; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center;"><h1>Email verificado com sucesso!</h1></div>'
+				);
 			} else {
-				return res.status(400).json({ erro: 'Email já verificado.' });
+				return res
+					.status(400)
+					.send(
+						'<div style="height: 98vh; width: 98vw; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center;"><h1>Email já verificado.</h1></div>'
+					);
 			}
 		} catch (erro) {
 			return res.status(401).json({ erro: erro.message });

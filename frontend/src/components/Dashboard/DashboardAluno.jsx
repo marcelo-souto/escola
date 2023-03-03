@@ -11,5 +11,3 @@ function DashboardAluno() {
 }
 
 export default DashboardAluno;
-
-export default DashboardAluno

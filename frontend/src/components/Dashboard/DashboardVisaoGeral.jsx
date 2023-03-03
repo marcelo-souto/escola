@@ -7,7 +7,7 @@ import { ReactComponent as ProfessorIcone } from '../../img/chapeu.svg';
 import { ReactComponent as TurmaIcone } from '../../img/turma.svg';
 import Button from '../Form/Button';
 import { Link } from 'react-router-dom';
-import Head from '../../helpers/Head'
+import Head from '../../helpers/Head';
 
 function DashboardVisaoGeral() {
 	const { loading, data, error, request } = useFetch();
@@ -51,12 +51,12 @@ function DashboardVisaoGeral() {
 				{data && data.turmas && (
 					<div>
 						<p>
+							<TurmaIcone
+								style={{ marginLeft: '8px', marginRight: '8px' }}
+								height='56'
+							/>
 							{data.turmas.length > 0 ? (
 								<>
-									<TurmaIcone
-										style={{ marginLeft: '8px', marginRight: '8px' }}
-										height='56'
-									/>
 									{data.turmas.length}{' '}
 									{data.turmas.length > 1 ? 'Turmas' : 'Turma'}
 								</>
